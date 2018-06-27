@@ -1,4 +1,4 @@
 # salesforceIntegration
 salesforce integration API
 
-[x] oauth 2.0
+* [x] OAuth 2.0
