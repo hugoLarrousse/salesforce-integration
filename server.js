@@ -1,7 +1,6 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const request = require('request-promise');
-
 require('dotenv').load({ path: '.env' });
 
 const Utils = require('./utils');
