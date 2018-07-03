@@ -1,10 +1,16 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const request = require('request-promise');
+
 require('dotenv').load({ path: '.env' });
+
+const Utils = require('./utils');
 
 const app = express();
 
+const TEMP_BEARER = process.env.tempBearer
+const TEMP_INSTANCE_URL = 'https://eu10.salesforce.com/';
+const TEMP_ROUTE = 'services/data/v43.0/query/';
 const port = 8079;
 
 const grantType = 'authorization_code';
@@ -20,6 +26,7 @@ app.get('/url', (req, res) => {
   const url = `${urlAuthorization}?response_type=${responseType}&client_id=${clientId}&redirect_uri=${redirectUri}`
   res.status(200).send(url);
 });
+
 app.get('/authCodeCallback', async (req, res) => {
   const code = req.query.code;
   if(!code) {
@@ -38,6 +45,46 @@ app.get('/authCodeCallback', async (req, res) => {
     console.log('e.message :', e.message);
     res.status(200).json(e.message);
   }
+});
+
+app.get('/getOpportunities', async (req, res) => {
+  const query = 'SELECT+id,Name+from+Opportunity';
+  const options = {
+    method: 'GET',
+    url: `${TEMP_INSTANCE_URL}${TEMP_ROUTE}?q=${query}`,
+    headers: {
+      Authorization: `Bearer ${TEMP_BEARER}`,
+    },
+    json: true,
+  };
+    try {
+      const result = await request(options);
+      res.status(200).json(result);
+    } catch (e) {
+      console.log('e.message :', e.message);
+      res.status(200).json(e.message);
+    }
+});
+
+console.log(Utils.prepareSOQLQuery([1,2,3]));
+
+
+app.get('/getEvents', async (req, res) => {
+  const query = 'SELECT+id+from+Event';
+  const options = {
+    method: 'GET',
+    url: `${TEMP_INSTANCE_URL}${TEMP_ROUTE}?q=${query}`,
+    headers: {
+      Authorization: `Bearer ${TEMP_BEARER}`,
+    },
+    json: true,
+  };
+    try {
+      const result = await request(options);
+      res.status(200).json(result);
+    } catch (e) {
+      res.status(200).json(e.message);
+    }
 });
 
 app.all('*', (req, res) => {
