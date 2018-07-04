@@ -1,0 +1,6 @@
+{
+  "requestRetry": {
+    "maxAttempts": 3,
+    "retryDelay": 100
+  }
+}
