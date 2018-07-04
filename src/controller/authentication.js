@@ -1,19 +1,7 @@
 const express = require('express');
-const { ObjectID } = require('mongodb');
-const config = require('config');
 const request = require('request-promise');
 
-const logger = require('../utils/logger');
-const middleware = require('../utils/middleware');
-const authenticationController = require('./authentication');
-const usersController = require('./users');
-const syncController = require('./sync');
-
 const router = express.Router();
-
-const TEMP_BEARER = process.env.tempBearer
-const TEMP_INSTANCE_URL = 'https://eu10.salesforce.com/';
-const TEMP_ROUTE = 'services/data/v43.0/query/';
 
 router.get('/access', async (req, res) => {
   const code = req.query.code;
