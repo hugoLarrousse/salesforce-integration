@@ -29,51 +29,11 @@ app.get('/url', (req, res) => {
   res.status(200).send(url);
 });
 
-app.get('/authCodeCallback', async (req, res) => {
-  const code = req.query.code;
-  if(!code) {
-    return res.send('code missing');
-  }
-  const { urlToken, clientId, clientSecret,  redirectUri} = process.env
-  const options = {
-    method: 'POST',
-    url: `${urlToken}?grant_type=${grantType}&code=${code}&client_secret=${clientSecret}&client_id=${clientId}&redirect_uri=${redirectUri}`,
-    json: true,
-  };
-  try {
-    const result = await request(options);
-    res.status(200).json(result);
-  } catch (e) {
-    console.log('e.message :', e.message);
-    res.status(200).json(e.message);
-  }
-});
-
-app.get('/getOpportunities', async (req, res) => {
-  const query = 'SELECT+id,Name+from+Opportunity';
-  const options = {
-    method: 'GET',
-    url: `${TEMP_INSTANCE_URL}${TEMP_ROUTE}?q=${query}`,
-    headers: {
-      Authorization: `Bearer ${TEMP_BEARER}`,
-    },
-    json: true,
-  };
-    try {
-      const result = await request(options);
-      res.status(200).json(result);
-    } catch (e) {
-      console.log('e.message :', e.message);
-      res.status(200).json(e.message);
-    }
-});
-
 console.log(Utils.prepareSOQLQuery([1,2,3]));
 
 app.all('*', (req, res) => {
-  res.status(200).json('OK all');
+  res.status(200).json('Wrong way my friend');
 });
-
 
 app.listen(port, function (res) {
   console.log(`Server is running on port ${port}`);
