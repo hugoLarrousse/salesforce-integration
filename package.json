@@ -5,11 +5,13 @@
   "main": "server.js",
   "dependencies": {
     "body-parser": "^1.18.3",
+    "config": "^1.30.0",
     "dotenv": "^6.0.0",
     "express": "^4.16.3",
     "lodash": "^4.17.10",
     "request": "^2.87.0",
-    "request-promise": "^4.2.2"
+    "request-promise": "^4.2.2",
+    "requestretry": "^1.13.0"
   },
   "devDependencies": {},
   "scripts": {
