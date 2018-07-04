@@ -1,0 +1,34 @@
+{
+  "extends": "airbnb",
+  "env": {
+      "jasmine": true
+  },
+  "plugins": [
+      "import",
+      "jasmine"
+  ],
+  "rules": {
+    "no-underscore-dangle": "off",
+    "no-console": "off",
+    "comma-dangle": ["error", {
+      "arrays": "always-multiline",
+      "objects": "always-multiline",
+      "imports": "always-multiline",
+      "exports": "always-multiline",
+      "functions": "ignore"
+    }],
+    "arrow-body-style":"off",
+    "arrow-parens":"off",
+    "import/prefer-default-export": "off",
+    "jasmine/no-disabled-tests": "warn",
+    "jasmine/no-focused-tests": "error",
+    "jasmine/valid-expect": "error",
+    "jasmine/no-spec-dupes": "error",
+    "no-await-in-loop": "off",
+    "no-restricted-syntax":"off",
+    "linebreak-style":"off",
+    "no-plusplus": [2, { "allowForLoopAfterthoughts": true }],
+    "max-len": [2, 150, 2],
+    "guard-for-in": "off"
+  }
+}
