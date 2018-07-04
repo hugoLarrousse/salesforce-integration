@@ -1,5 +1,5 @@
 const mongo = require('../../db/mongo');
-const logger = require('../../utils');
+const logger = require('../../utils/logger');
 
 const { databaseSalesforce } = process.env;
 
@@ -11,7 +11,7 @@ const collectionName = {
 const saveData = async (dataType, documents) => {
   const collection = collectionName[dataType] || null;
   for (const doc of documents) {
-    // const filter = {
+    const filter = {};
     //   id: Number(doc.id),
     //   team: Number(doc.team),
     // };

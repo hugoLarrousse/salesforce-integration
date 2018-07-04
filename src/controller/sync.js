@@ -3,7 +3,7 @@ const request = require('request-promise');
 
 const router = express.Router();
 
-const TEMP_BEARER = process.env.tempBearer
+const TEMP_BEARER = process.env.tempBearer;
 const TEMP_INSTANCE_URL = 'https://eu10.salesforce.com/';
 const TEMP_ROUTE = 'services/data/v43.0/query/';
 
@@ -17,12 +17,12 @@ router.get('/events', async (req, res) => {
     },
     json: true,
   };
-    try {
-      const result = await request(options);
-      res.status(200).json(result);
-    } catch (e) {
-      res.status(200).json(e.message);
-    }
+  try {
+    const result = await request(options);
+    res.status(200).json(result);
+  } catch (e) {
+    res.status(200).json(e.message);
+  }
 });
 
 router.get('/opportunities', async (req, res) => {
@@ -35,13 +35,13 @@ router.get('/opportunities', async (req, res) => {
     },
     json: true,
   };
-    try {
-      const result = await request(options);
-      res.status(200).json(result);
-    } catch (e) {
-      console.log('e.message :', e.message);
-      res.status(200).json(e.message);
-    }
+  try {
+    const result = await request(options);
+    res.status(200).json(result);
+  } catch (e) {
+    console.log('e.message :', e.message);
+    res.status(200).json(e.message);
+  }
 });
 
 module.exports = router;

@@ -1,5 +1,4 @@
 const { MongoClient } = require('mongodb');
-const error = require('../utils/error');
 const {
   addUpdatedAtToModel,
   addCreatedAtToModel,
@@ -14,11 +13,9 @@ const {
 
 const mongodbSalesforce = MongoClient
   .connect(`${process.env.dbserver}/${databaseSalesforce}${mongoOptions}`, { poolSize: 20 })
-  .catch(err => error.throwError(__filename, 'mongo', null, null, `MongoClient.connect() : ${err.message}`, null, err));
+  .catch(err => logger.errorDb(__filename, 'mongo', null, null, `MongoClient.connect() : ${err.message}`, null, err));
 
 const mongodbName = {
-  heptaward: mongodbHeptaward,
-  pipedrive: mongodbPipedrive,
   salesforce: mongodbSalesforce,
 };
 
@@ -203,7 +200,6 @@ const findOneAndReplace = async (database, collection, query, toUpdate, options)
 
 // exports.getConnection = getConnection;
 exports.insert = insert;
-exports.insertLog = insertLog;
 exports.updateOne = updateOne;
 exports.update = update;
 exports.softDelete = softDelete;

@@ -1,4 +1,4 @@
-const { fixedToken } = process.env
+const { fixedToken } = process.env;
 
 const pickToken = headers => headers.authorization || null;
 
@@ -10,4 +10,4 @@ exports.verifyToken = (req, res, next) => {
   } else {
     res.status(401).send({ error: true, message: 'Error Token' });
   }
-}
+};

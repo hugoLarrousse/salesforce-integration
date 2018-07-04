@@ -42,4 +42,4 @@ const requestSalesforce = async (baseUrl, path, method, data) => {
   return null;
 };
 
-exports.requestPipedrive = requestPipedrive;
+exports.requestSalesforce = requestSalesforce;
