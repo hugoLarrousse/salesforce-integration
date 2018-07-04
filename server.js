@@ -4,6 +4,7 @@ const request = require('request-promise');
 require('dotenv').load({ path: '.env' });
 
 const Utils = require('./utils');
+const controller = require('./src/controller');
 
 const app = express();
 
@@ -19,6 +20,8 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
     extended: true
 }));
+
+app.use('/', controller);
 
 app.get('/url', (req, res) => {
   const { clientId, redirectUri, urlAuthorization} = process.env
@@ -66,25 +69,6 @@ app.get('/getOpportunities', async (req, res) => {
 });
 
 console.log(Utils.prepareSOQLQuery([1,2,3]));
-
-
-app.get('/getEvents', async (req, res) => {
-  const query = 'SELECT+id+from+Event';
-  const options = {
-    method: 'GET',
-    url: `${TEMP_INSTANCE_URL}${TEMP_ROUTE}?q=${query}`,
-    headers: {
-      Authorization: `Bearer ${TEMP_BEARER}`,
-    },
-    json: true,
-  };
-    try {
-      const result = await request(options);
-      res.status(200).json(result);
-    } catch (e) {
-      res.status(200).json(e.message);
-    }
-});
 
 app.all('*', (req, res) => {
   res.status(200).json('OK all');
