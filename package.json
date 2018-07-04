@@ -9,9 +9,12 @@
     "dotenv": "^6.0.0",
     "express": "^4.16.3",
     "lodash": "^4.17.10",
+    "mongodb": "^3.1.0",
     "request": "^2.87.0",
     "request-promise": "^4.2.2",
-    "requestretry": "^1.13.0"
+    "requestretry": "^1.13.0",
+    "winston": "^2.4.2",
+    "winston-slack-hook": "^0.3.0"
   },
   "devDependencies": {},
   "scripts": {
