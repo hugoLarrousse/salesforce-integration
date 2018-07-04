@@ -80,11 +80,9 @@ const create = (e) => {
   console.log(`${new Date()} - ${e}`);
 };
 
-exports.register = register;
 exports.error = error;
 exports.create = create;
 exports.info = info;
-exports.infoDb = infoDb;
 exports.warn = warn;
 exports.errorDb = errorDb;
 exports.warnDb = warnDb;
