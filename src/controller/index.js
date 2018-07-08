@@ -9,7 +9,7 @@ const router = express.Router();
 
 router.all('*', middleware.verifyToken);
 
-router.use('/authentication', authenticationController);
+router.use('/credentials', authenticationController);
 router.use('/users', usersController);
 router.use('/sync', syncController);
 

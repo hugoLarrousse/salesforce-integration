@@ -1,25 +1,25 @@
 const express = require('express');
-const request = require('request-promise');
+const api = require('../services/api');
+const formatData = require('../services/formatData');
 
 const router = express.Router();
 
-router.get('/access', async (req, res) => {
-  const code = req.query.code;
-  if(!code) {
-    return res.send('code missing');
-  }
-  const { urlToken, clientId, clientSecret,  redirectUri} = process.env
-  const options = {
-    method: 'POST',
-    url: `${urlToken}?grant_type=${grantType}&code=${code}&client_secret=${clientSecret}&client_id=${clientId}&redirect_uri=${redirectUri}`,
-    json: true,
-  };
+router.get('/', async (req, res) => {
+  const { code } = req.query;
   try {
-    const result = await request(options);
-    res.status(200).json(result);
+    if (!code) {
+      throw new Error('code is missing');
+    }
+    const credentials = await api.getCredentials(code);
+    if (!credentials && !credentials.id) {
+      throw new Error('no credentials');
+    }
+    const userInfo = await api.getInfoUser(credentials.id, credentials.access_token);
+    console.log('userInfo :', userInfo);
+
+    res.status(200).send(formatData.userInfo({ ...userInfo, credentials }));
   } catch (e) {
-    console.log('e.message :', e.message);
-    res.status(200).json(e.message);
+    res.status(400).json(e.message);
   }
 });
 
