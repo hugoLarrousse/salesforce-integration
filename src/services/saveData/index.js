@@ -4,24 +4,37 @@ const logger = require('../../utils/logger');
 const { databaseSalesforce } = process.env;
 
 const collectionName = {
-  opportunities: 'opportunities',
-  events: 'events',
+  opportunity: 'opportunities',
+  event: 'events',
+  task: 'tasks',
 };
 
-const saveData = async (dataType, documents) => {
+module.exports = async (dataType, documents) => {
   const collection = collectionName[dataType] || null;
+  const arrayInsert = [];
+  const arrayUpdate = [];
   for (const doc of documents) {
-    const filter = {};
-    //   id: Number(doc.id),
-    //   team: Number(doc.team),
-    // };
+    const filter = {
+      id: doc.Id,
+    };
     try {
-      const result = await mongo.updateOne(databaseSalesforce, collection, filter, doc, { upsert: true });
-      console.log('result :', result);
+      const resultUpdate = await mongo.updateOnePipedrive(databaseSalesforce, collection, filter, doc, { upsert: true });
+      if (resultUpdate.upserted) {
+        arrayInsert.push(doc);
+      }
+      if (resultUpdate.nModified) {
+        arrayUpdate.push(doc);
+      }
     } catch (e) {
-      logger.error(__filename, saveData.name, e.message);
+      logger.errorDb(__filename, 'saveData', databaseSalesforce, collection, e.message, null, doc);
+      return {
+        arrayInsert,
+        arrayUpdate,
+      };
     }
   }
+  return {
+    arrayInsert,
+    arrayUpdate,
+  };
 };
-
-exports.saveData = saveData;
