@@ -2,5 +2,6 @@
   "requestRetry": {
     "maxAttempts": 3,
     "retryDelay": 100
-  }
+  },
+  "grantType": "authorization_code"
 }
