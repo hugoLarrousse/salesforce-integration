@@ -7,12 +7,13 @@ const RETRY_DELAY = config.get('requestRetry.retryDelay');
 const defaultRetryStrategy = (err, response) =>
   (response && response.body && (response.statusCode < 200 || response.statusCode > 299));
 
-const requestSalesforce = async (baseUrl, path, method, data) => {
+const salesforce = async (baseUrl, path, query, method, headers, data) => {
   const options = {
     method,
-    url: `${baseUrl}${path}`,
+    url: `${baseUrl}${path ? `/${path}` : ''}${query ? `?${query}` : ''}`,
     headers: {
       'Content-Type': 'application/json',
+      ...headers,
     },
     body: data,
     json: true,
@@ -20,6 +21,9 @@ const requestSalesforce = async (baseUrl, path, method, data) => {
     retryDelay: RETRY_DELAY,
     retryStrategy: defaultRetryStrategy,
   };
+
+  console.log('options :', options);
+  // return null
 
   const { error, response, body } = await requestRetry(options);
   if (error) {
@@ -42,4 +46,4 @@ const requestSalesforce = async (baseUrl, path, method, data) => {
   return null;
 };
 
-exports.requestSalesforce = requestSalesforce;
+exports.salesforce = salesforce;
