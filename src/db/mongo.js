@@ -9,10 +9,11 @@ const logger = require('../utils/logger');
 const {
   databaseSalesforce,
   mongoOptions,
+  dbServer,
 } = process.env;
 
 const mongodbSalesforce = MongoClient
-  .connect(`${process.env.dbserver}/${databaseSalesforce}${mongoOptions}`, { poolSize: 20 })
+  .connect(`${dbServer}/${databaseSalesforce}${mongoOptions}`, { poolSize: 20 })
   .catch(err => logger.errorDb(__filename, 'mongo', null, null, `MongoClient.connect() : ${err.message}`, null, err));
 
 const mongodbName = {
@@ -26,7 +27,6 @@ const insert = async (databaseName, collectionName, doc) => {
   let insertedDoc;
   if (response.ops.length > 0) {
     [insertedDoc] = response.ops;
-    // logger.infoDb(__filename, insert.name, databaseName, collectionName, `${insertedDoc._id} inserted`, insertedDoc._id);
   } else {
     logger.errorDb(__filename, insert.name, databaseName, collectionName, 'Unable to insert', null, doc);
   }
@@ -56,8 +56,7 @@ const updateOne = async (databaseName, collectionName, query = {}, doc, options 
   return docUpdated.value;
 };
 
-// TO DO check if usefull
-const updateOnePipedrive = async (databaseName, collectionName, query = {}, doc, options = {}) => {
+const updateOneSalesforce = async (databaseName, collectionName, query = {}, doc, options = {}) => {
   const docToUpdate = { $set: doc };
   const db = await mongodbName[databaseName];
   const docUpdated = await db.collection(collectionName)
@@ -75,7 +74,7 @@ const updateOnePipedrive = async (databaseName, collectionName, query = {}, doc,
   if (docUpdated.result.ok === 1) {
     return docUpdated.result;
   }
-  logger.warnDb(__filename, updateOnePipedrive.name, databaseName, collectionName, 'Unable to update', null, doc);
+  logger.warnDb(__filename, updateOneSalesforce.name, databaseName, collectionName, 'Unable to update', null, doc);
 
   return null;
 };
@@ -213,4 +212,4 @@ exports.updateOneOwnRules = updateOneOwnRules;
 exports.updateOwnRules = updateOwnRules;
 exports.mongodbName = mongodbName;
 exports.findOneAndReplace = findOneAndReplace;
-exports.updateOnePipedrive = updateOnePipedrive;
+exports.updateOneSalesforce = updateOneSalesforce;
