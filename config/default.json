@@ -3,5 +3,6 @@
     "maxAttempts": 3,
     "retryDelay": 100
   },
-  "grantType": "authorization_code"
+  "grantType": "authorization_code",
+  "h7Url": "http://localhost:3333"
 }
