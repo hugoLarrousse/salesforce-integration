@@ -1,16 +1,25 @@
 const api = require('../api');
 const saveData = require('../saveData');
+const formatData = require('../formatData');
+const sendData = require('../sendData');
 
-const syncByType = async (integrationInfo, dataType) => {
+const dataTypeFOrEchoes = ['opportunity', 'task', 'event'];
+
+
+const syncByType = async (integrationInfo, dataType, user, allIntegrations) => {
   const results = await api.getData(integrationInfo.instanceUrl, integrationInfo.token, dataType);
-  return saveData(dataType, results.record);
+  const dataForEchoes = await saveData(dataType, results.record);
+  if (dataTypeFOrEchoes.includes(dataType)) {
+    const formattedData = await formatData.echoesInfo(dataForEchoes, dataType, user, allIntegrations);
+    await sendData(formattedData);
+  }
 };
 
-exports.everything = async (integrationInfo) => {
-  return Promise.all(
-    syncByType(integrationInfo, 'opportunity'),
-    syncByType(integrationInfo, 'task'),
-    syncByType(integrationInfo, 'event'),
-    syncByType(integrationInfo, 'account')
+exports.everything = async (integrationInfo, user, allIntegrations) => {
+  await syncByType(integrationInfo, 'account');
+  await Promise.all(
+    syncByType(integrationInfo, 'opportunity', user, allIntegrations),
+    syncByType(integrationInfo, 'task', user, allIntegrations),
+    syncByType(integrationInfo, 'event', user, allIntegrations),
   );
 };
