@@ -7,5 +7,10 @@ const syncByType = async (integrationInfo, dataType) => {
 };
 
 exports.everything = async (integrationInfo) => {
-  return Promise.all(syncByType(integrationInfo, 'opportunity'), syncByType(integrationInfo, 'task'), syncByType(integrationInfo, 'event'));
+  return Promise.all(
+    syncByType(integrationInfo, 'opportunity'),
+    syncByType(integrationInfo, 'task'),
+    syncByType(integrationInfo, 'event'),
+    syncByType(integrationInfo, 'account')
+  );
 };
