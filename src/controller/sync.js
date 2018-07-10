@@ -41,11 +41,14 @@ router.post('/', async (req, res) => {
   const { integrationInfo, user, allIntegrations } = req.body;
   try {
     check.integrationInfo(integrationInfo);
-    const result = await syncData.everything(integrationInfo, user, allIntegrations);
-    res.status(200).json(result);
+    if (user && allIntegrations.length > 0) {
+      res.status(200).send('ok');
+    } else {
+      res.status(400).send('ERROR USER OR ALL INTEGRATIONS');
+    }
+    await syncData.everything(integrationInfo, user, allIntegrations);
   } catch (e) {
     console.log('e.message :', e.message);
-    res.status(200).json(e.message);
   }
 });
 
