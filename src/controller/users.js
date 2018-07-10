@@ -6,7 +6,7 @@ const router = express.Router();
 
 router.all('*', middleware.refreshToken);
 
-router.get('/', async (req, res) => {
+router.post('/', async (req, res) => {
   const { integrationInfo } = req.body;
   try {
     const coworkers = await users.getCoworkers(integrationInfo);
