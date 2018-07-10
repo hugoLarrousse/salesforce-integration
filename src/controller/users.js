@@ -1,12 +1,15 @@
 const express = require('express');
 const users = require('../services/users');
+const middleware = require('../utils/middleware');
 
 const router = express.Router();
 
+router.all('*', middleware.refreshToken);
+
 router.get('/', async (req, res) => {
-  const { integration } = req.body;
+  const { integrationInfo } = req.body;
   try {
-    const coworkers = await users.getCoworkers(integration);
+    const coworkers = await users.getCoworkers(integrationInfo);
     res.status(200).send(coworkers);
   } catch (e) {
     res.status(400).send(e.message);

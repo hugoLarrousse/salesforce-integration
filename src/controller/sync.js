@@ -2,12 +2,15 @@ const express = require('express');
 const request = require('../services/request');
 const check = require('../utils/check');
 const syncData = require('../services/syncData');
+const middleware = require('../utils/middleware');
 
 const router = express.Router();
 
 const TEMP_BEARER = process.env.tempBearer;
 const TEMP_INSTANCE_URL = 'https://eu10.salesforce.com/';
 const TEMP_ROUTE = 'services/data/v43.0/query/';
+
+router.all('*', middleware.refreshToken);
 
 router.get('/events', async (req, res) => {
   const query = 'SELECT+id,Subject +from+Event';
