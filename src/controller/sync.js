@@ -14,7 +14,7 @@ router.get('/events', async (req, res) => {
   try {
     const result = await request.salesforce(TEMP_INSTANCE_URL, TEMP_ROUTE, query, 'GET', {
       Authorization: `Bearer ${TEMP_BEARER}`,
-    });
+    }, null, true);
     res.status(200).json(result);
   } catch (e) {
     res.status(200).json(e.message);
@@ -26,7 +26,7 @@ router.get('/opportunities', async (req, res) => {
   try {
     const result = await request.salesforce(TEMP_INSTANCE_URL, TEMP_ROUTE, query, 'GET', {
       Authorization: `Bearer ${TEMP_BEARER}`,
-    });
+    }, null, true);
     res.status(200).json(result);
   } catch (e) {
     console.log('e.message :', e.message);

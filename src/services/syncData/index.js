@@ -11,7 +11,9 @@ const syncByType = async (integrationInfo, dataType, user, allIntegrations) => {
   const dataForEchoes = await saveData(dataType, results.record);
   if (dataTypeFOrEchoes.includes(dataType)) {
     const formattedData = await formatData.echoesInfo(dataForEchoes, dataType, user, allIntegrations);
-    await sendData(formattedData);
+    if (formattedData.toInsert.length > 0 || formattedData.toUpdate.length > 0 || formatData.toUpsert.length > 0) {
+      await sendData(formattedData);
+    }
   }
 };
 

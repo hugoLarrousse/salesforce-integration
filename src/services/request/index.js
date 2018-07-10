@@ -7,7 +7,7 @@ const RETRY_DELAY = config.get('requestRetry.retryDelay');
 const defaultRetryStrategy = (err, response) =>
   (response && response.body && (response.statusCode < 200 || response.statusCode > 299));
 
-const salesforce = async (baseUrl, path, query, method, headers, data) => {
+const salesforce = async (baseUrl, path, query, method, headers, data, retry) => {
   const options = {
     method,
     url: `${baseUrl}${path ? `/${path}` : ''}${query ? `?${query}` : ''}`,
@@ -17,13 +17,11 @@ const salesforce = async (baseUrl, path, query, method, headers, data) => {
     },
     body: data,
     json: true,
-    maxAttempts: MAX_ATTEMPTS,
-    retryDelay: RETRY_DELAY,
-    retryStrategy: defaultRetryStrategy,
   };
 
-  console.log('options :', options);
-  // return null
+  if (retry) {
+    Object.assign(options, { maxAttempts: MAX_ATTEMPTS, retryDelay: RETRY_DELAY, retryStrategy: defaultRetryStrategy });
+  }
 
   const { error, response, body } = await requestRetry(options);
   if (error) {
