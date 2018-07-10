@@ -15,16 +15,11 @@ router.get('/', async (req, res) => {
       throw new Error('no credentials');
     }
     const userInfo = await api.getInfoUser(credentials.id, credentials.access_token);
-    console.log('userInfo :', userInfo);
 
     res.status(200).send(formatData.userInfo({ ...userInfo, credentials }));
   } catch (e) {
     res.status(400).json(e.message);
   }
 });
-
-// router.post('/pair', verifyToken, verifyParams, async (req, res) => {
-
-// });
 
 module.exports = router;

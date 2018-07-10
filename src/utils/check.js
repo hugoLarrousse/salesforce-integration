@@ -1,6 +1,7 @@
 const Joi = require('joi');
 
 const schemaIntegrationInfo = Joi.object().keys({
+  _id: Joi.string().optional(),
   userId: Joi.string().required(),
   orgaId: Joi.string().required(),
   name: Joi.string().required(),
@@ -10,10 +11,10 @@ const schemaIntegrationInfo = Joi.object().keys({
   token: Joi.string().required(),
   email: Joi.string().email().required(),
   refreshToken: Joi.string().required(),
-  tokenExpiresAt: Joi.string().required(),
+  tokenExpiresAt: Joi.any().required(),
   instanceUrl: Joi.string().required(),
-  createdAt: Joi.string().optional(),
-  updatedAt: Joi.string().optional(),
+  createdAt: Joi.any().optional(),
+  updatedAt: Joi.any().optional(),
 });
 
 exports.integrationInfo = info => {

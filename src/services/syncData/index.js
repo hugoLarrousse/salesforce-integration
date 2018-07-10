@@ -8,7 +8,8 @@ const dataTypeFOrEchoes = ['opportunity', 'task', 'event'];
 
 const syncByType = async (integrationInfo, dataType, user, allIntegrations) => {
   const results = await api.getData(integrationInfo.instanceUrl, integrationInfo.token, dataType);
-  const dataForEchoes = await saveData(dataType, results.record);
+  console.log('results :', results);
+  const dataForEchoes = await saveData(dataType, results.records);
   if (dataTypeFOrEchoes.includes(dataType)) {
     const formattedData = await formatData.echoesInfo(dataForEchoes, dataType, user, allIntegrations);
     if (formattedData.toInsert.length > 0 || formattedData.toUpdate.length > 0 || formatData.toUpsert.length > 0) {
