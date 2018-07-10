@@ -29,6 +29,21 @@ exports.userInfo = (infoUser) => {
   };
 };
 
+exports.coworkerInfo = (coworker, teamId) => {
+  return {
+    email: coworker.Email,
+    teamId,
+    userId: coworker.Id,
+    firstname: coworker.FirstName,
+    lastname: coworker.LastName,
+    phone: coworker.Phone,
+    lang: coworker.LanguageLocaleKey.split('_')[0],
+    default_currency: currency[coworker.LocaleSidKey.split('_')[2]] || 'USD',
+    admin: coworker.ReceivesAdminInfoEmails,
+    iconUrl: coworker.FullPhotoUrl.split('profilephoto/')[1].length > 8 ? coworker.FullPhotoUrl : null,
+  };
+};
+
 const formatWonLostOpportunity = async (docs, isInsert, user, allIntegrations) => {
   return docs.map(async (doc) => {
     const account = await mongo.findOne('salesforce', 'accounts', { Id: doc.AccountId });
