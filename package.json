@@ -10,7 +10,7 @@
     "express": "^4.16.3",
     "joi": "^13.4.0",
     "lodash": "^4.17.10",
-    "mongodb": "^3.1.0",
+    "mongodb": "^2.2.1",
     "request": "^2.87.0",
     "request-promise": "^4.2.2",
     "requestretry": "^1.13.0",
