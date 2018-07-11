@@ -30,7 +30,6 @@ exports.userInfo = (infoUser) => {
 };
 
 exports.coworkerInfo = (coworker, teamId) => {
-  console.log('coworker :', coworker);
   return {
     email: coworker.Email,
     teamId,
