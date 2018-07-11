@@ -13,7 +13,7 @@ const {
 } = process.env;
 
 const mongodbSalesforce = MongoClient
-  .connect(`${dbServer}/${databaseSalesforce}${mongoOptions}`, { poolSize: 20 })
+  .connect(`${dbServer}/${databaseSalesforce}${mongoOptions || ''}`, { poolSize: 20 })
   .catch(err => logger.errorDb(__filename, 'mongo', null, null, `MongoClient.connect() : ${err.message}`, null, err));
 
 const mongodbName = {
