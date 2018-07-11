@@ -27,7 +27,7 @@ module.exports = async (dataType, documents) => {
         arrayUpdate.push(doc);
       }
     } catch (e) {
-      logger.errorDb(__filename, 'saveData', databaseSalesforce, collection, e.message, null, doc);
+      logger.errorDb(__filename, 'saveData', databaseSalesforce.name, collection, e.message, null, doc);
       return {
         arrayInsert,
         arrayUpdate,

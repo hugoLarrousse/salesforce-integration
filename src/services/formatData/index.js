@@ -30,6 +30,7 @@ exports.userInfo = (infoUser) => {
 };
 
 exports.coworkerInfo = (coworker, teamId) => {
+  console.log('coworker :', coworker);
   return {
     email: coworker.Email,
     teamId,
@@ -37,15 +38,15 @@ exports.coworkerInfo = (coworker, teamId) => {
     firstname: coworker.FirstName,
     lastname: coworker.LastName,
     phone: coworker.Phone,
-    lang: coworker.LanguageLocaleKey.split('_')[0],
-    default_currency: currency[coworker.LocaleSidKey.split('_')[2]] || 'USD',
+    lang: coworker.LanguageLocaleKey ? coworker.LanguageLocaleKey.split('_')[0] : null,
+    default_currency: coworker.LocaleSidKey ? (currency[coworker.LocaleSidKey.split('_')[2]] || 'USD') : null,
     admin: coworker.ReceivesAdminInfoEmails,
     iconUrl: coworker.FullPhotoUrl.split('profilephoto/')[1].length > 8 ? coworker.FullPhotoUrl : null,
   };
 };
 
 const formatWonLostOpportunity = async (docs, isInsert, user, allIntegrations) => {
-  return docs.map(async (doc) => {
+  return Promise.all(docs.map(async (doc) => {
     const account = await mongo.findOne('salesforce', 'accounts', { Id: doc.AccountId });
     const status = doc.IsWon ? 'won' : 'lost';
     const timestampDate = new Date(doc.LastModifiedDate).getTime();
@@ -59,11 +60,11 @@ const formatWonLostOpportunity = async (docs, isInsert, user, allIntegrations) =
       ...model.timestamp(timestampDate, timestampDate, null, timestampDate, timestampDate),
       ...model.notify_users(isInsert),
     };
-  });
+  }));
 };
 
 const formatOpenedOpportunity = async (docs, isInsert, user, allIntegrations) => {
-  return docs.map(async (doc) => {
+  return Promise.all(docs.map(async (doc) => {
     const account = await mongo.findOne('salesforce', 'accounts', { Id: doc.AccountId });
     const status = doc.IsClosed ? (doc.IsWon && 'won') || 'lost' : 'opened';
     const timestampDate = new Date(doc.CreatedDate).getTime();
@@ -78,11 +79,11 @@ const formatOpenedOpportunity = async (docs, isInsert, user, allIntegrations) =>
       ...model.timestamp(timestampDate, timestampDate, null, timestampDate, timestampExpectedDate),
       ...model.notify_users(isInsert),
     };
-  });
+  }));
 };
 
 const formatTask = (docs, isInsert, user, allIntegrations) => {
-  return docs.map(async (doc) => {
+  return Promise.all(docs.map(async (doc) => {
     const account = await mongo.findOne('salesforce', 'accounts', { Id: doc.AccountId });
     const timestampDate = new Date(doc.CreatedDate).getTime();
     return {
@@ -95,11 +96,11 @@ const formatTask = (docs, isInsert, user, allIntegrations) => {
       ...model.timestamp(timestampDate, timestampDate, timestampDate, timestampDate),
       ...model.notify_users(isInsert),
     };
-  });
+  }));
 };
 
 const formatEvent = (docs, isInsert, user, allIntegrations) => {
-  return docs.map(async (doc) => {
+  return Promise.all(docs.map(async (doc) => {
     const account = await mongo.findOne('salesforce', 'accounts', { Id: doc.AccountId });
     return {
       ...model.h7Info(doc.OwnerId, allIntegrations, user.team_id),
@@ -116,7 +117,7 @@ const formatEvent = (docs, isInsert, user, allIntegrations) => {
       ),
       ...model.notify_users(isInsert),
     };
-  });
+  }));
 };
 
 exports.echoesInfo = async ({ arrayInsert, arrayUpdate }, dataType, user, allIntegrations) => {
@@ -124,7 +125,7 @@ exports.echoesInfo = async ({ arrayInsert, arrayUpdate }, dataType, user, allInt
     return {
       toInsert: await formatOpenedOpportunity(arrayInsert, true, user, allIntegrations),
       toUpdate: await formatOpenedOpportunity(arrayUpdate, false, user, allIntegrations),
-      toUpsert: await formatWonLostOpportunity([...arrayInsert, ...arrayUpdate].filter(data => data.IsClosed)),
+      toUpsert: await formatWonLostOpportunity([...arrayInsert, ...arrayUpdate].filter(data => data.IsClosed), false, user, allIntegrations),
     };
   } else if (dataType === 'task') {
     return {

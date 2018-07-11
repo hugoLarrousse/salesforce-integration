@@ -15,14 +15,13 @@ const salesforce = async (baseUrl, path, query, method, headers, data, retry) =>
       'Content-Type': 'application/json',
       ...headers,
     },
-    body: data,
+    body: data || {},
     json: true,
   };
 
   if (retry) {
     Object.assign(options, { maxAttempts: MAX_ATTEMPTS, retryDelay: RETRY_DELAY, retryStrategy: defaultRetryStrategy });
   }
-
   const { error, response, body } = await requestRetry(options);
   if (error) {
     console.log('error:', error);

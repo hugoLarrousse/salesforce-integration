@@ -15,9 +15,10 @@ exports.verifyToken = (req, res, next) => {
   }
 };
 
-const checkTokenValid = (expirationDate) => Date.now() + 300000 > Number(expirationDate);
+const checkTokenValid = (expirationDate) => Date.now() + 300000 < Number(expirationDate);
 
 exports.refreshToken = async (req, res, next) => {
+  console.log('req.body :', req.body);
   const { integrationInfo } = req.body;
   if (checkTokenValid(integrationInfo.tokenExpiresAt)) {
     next();
@@ -25,7 +26,7 @@ exports.refreshToken = async (req, res, next) => {
     const result = await api.refreshToken(integrationInfo.refreshToken);
     if (result && result.access_token) {
       Object.assign(integrationInfo, { token: result.access_token, tokenExpiresAt: Date.now() + 86400000 });
-      sendData.integration(integrationInfo);
+      sendData.integration({ integration: { _id: integrationInfo._id, token: result.access_token, tokenExpiresAt: Date.now() + 86400000 } });
       req.body.integrationInfo = integrationInfo;
     }
     next();

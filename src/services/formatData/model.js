@@ -8,7 +8,7 @@ const icon = {
 
 
 exports.h7Info = (integrationId, allIntegrations, teamH7Id) => {
-  const integration = allIntegrations.filter(integr => integrationId === integr.integrationId);
+  const [integration] = allIntegrations.filter(integr => integrationId === integr.integrationId);
   return {
     orga_h7_id: (integration && integration.orgaId) || null,
     team_h7_id: teamH7Id,
