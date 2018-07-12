@@ -24,7 +24,7 @@ const mongodbName = {
 const insert = async (databaseName, collectionName, doc) => {
   const docToSave = addCreatedAtToModel(doc);
   const db = await mongodbName[databaseName];
-  console.log('db :', databaseName);
+  console.log('db :', `${dbServer}/${databaseSalesforce}${mongoOptions || ''}`);
   const response = await db.collection(collectionName).insertOne(docToSave);
   let insertedDoc;
   if (response.ops.length > 0) {
@@ -38,7 +38,7 @@ const insert = async (databaseName, collectionName, doc) => {
 const updateOne = async (databaseName, collectionName, query = {}, doc, options = {}) => {
   const docToUpdate = { $set: addUpdatedAtToModel(doc) };
   const db = await mongodbName[databaseName];
-  console.log('db :', databaseName);
+  console.log('db :', `${dbServer}/${databaseSalesforce}${mongoOptions || ''}`);
   const docUpdated = await db.collection(collectionName)
     .findOneAndUpdate(
       {
@@ -62,7 +62,7 @@ const updateOne = async (databaseName, collectionName, query = {}, doc, options 
 const updateOneSalesforce = async (databaseName, collectionName, query = {}, doc, options = {}) => {
   const docToUpdate = { $set: doc };
   const db = await mongodbName[databaseName];
-  console.log('db :', databaseName);
+  console.log('db :', `${dbServer}/${databaseSalesforce}${mongoOptions || ''}`);
   const docUpdated = await db.collection(collectionName)
     .updateOne(
       {
@@ -87,7 +87,7 @@ const updateOneSalesforce = async (databaseName, collectionName, query = {}, doc
 const update = async (databaseName, collectionName, query = {}, doc, options = {}) => {
   const docToUpdate = { $set: addUpdatedAtToModel(doc) };
   const db = await mongodbName[databaseName];
-  console.log('db :', databaseName);
+  console.log('db :', `${dbServer}/${databaseSalesforce}${mongoOptions || ''}`);
   const updated = await db.collection(collectionName)
     .update(
       {
@@ -116,7 +116,7 @@ const softDeleteMany = async (databaseName, collectionName, query = {}) =>
 
 const deleteDoc = async (databaseName, collectionName, query) => {
   const db = await mongodbName[databaseName];
-  console.log('db :', databaseName);
+  console.log('db :', `${dbServer}/${databaseSalesforce}${mongoOptions || ''}`);
   const deleted = await db.collection(collectionName).remove(query);
   if (deleted.result.ok === 1 && deleted.result.n >= 1) {
     // logger.infoDb(__filename, deleteDoc.name, databaseName, collectionName, `${query._id} was removed`, query._id);
@@ -134,7 +134,7 @@ const findOne = async (databaseName, collectionName, query = {}) => {
 
 const find = async (databaseName, collectionName, query = {}, sort = {}, limit = 0, offset = 0) => {
   const db = await mongodbName[databaseName];
-  console.log('db :', databaseName);
+  console.log('db :', `${dbServer}/${databaseSalesforce}${mongoOptions || ''}`);
   const docs = await db.collection(collectionName)
     .find({
       ...query,
@@ -149,7 +149,7 @@ const find = async (databaseName, collectionName, query = {}, sort = {}, limit =
 
 const count = async (databaseName, collectionName, query) => {
   const db = await mongodbName[databaseName];
-  console.log('db :', databaseName);
+  console.log('db :', `${dbServer}/${databaseSalesforce}${mongoOptions || ''}`);
   return db.collection(collectionName)
     .count({
       ...query,
@@ -159,14 +159,14 @@ const count = async (databaseName, collectionName, query) => {
 
 const deleteMany = async (databaseName, collection, query, options) => {
   const db = await mongodbName[databaseName];
-  console.log('db :', databaseName);
+  console.log('db :', `${dbServer}/${databaseSalesforce}${mongoOptions || ''}`);
   const resultDelete = await db.collection(collection).deleteMany(query, options);
   return resultDelete.result;
 };
 
 const updateOwnRules = async (databaseName, collection, query = {}, docToUpdate, options = {}) => {
   const db = await mongodbName[databaseName];
-  console.log('db :', databaseName);
+  console.log('db :', `${dbServer}/${databaseSalesforce}${mongoOptions || ''}`);
   const updated = await db.collection(collection)
     .update(
       query,
@@ -185,7 +185,7 @@ const updateOwnRules = async (databaseName, collection, query = {}, docToUpdate,
 
 const updateOneOwnRules = async (databaseName, collection, query, docToUpdate, options = {}) => {
   const db = await mongodbName[databaseName];
-  console.log('db :', databaseName);
+  console.log('db :', `${dbServer}/${databaseSalesforce}${mongoOptions || ''}`);
   const docUpdated = await db.collection(collection).findOneAndUpdate(query, docToUpdate, { returnOriginal: false, ...options });
   if (docUpdated.ok === 1 && docUpdated.value) {
     // logger.infoDb(__filename, pipedriveUpdateOne.name, database, collection, `${docUpdated.value._id} updated`, docUpdated.value._id);
@@ -199,7 +199,7 @@ const updateOneOwnRules = async (databaseName, collection, query, docToUpdate, o
 
 const findOneAndReplace = async (databaseName, collection, query, toUpdate, options) => {
   const db = await mongodbName[databaseName];
-  console.log('db :', databaseName);
+  console.log('db :', `${dbServer}/${databaseSalesforce}${mongoOptions || ''}`);
   const docFoundAndModified = await db.collection(collection).findOneAndReplace(query, toUpdate, options);
   if (docFoundAndModified.ok === 1) {
     return docFoundAndModified.value;
