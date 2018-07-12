@@ -4,6 +4,17 @@ const config = require('config');
 const MAX_ATTEMPTS = config.get('requestRetry.maxAttempts');
 const RETRY_DELAY = config.get('requestRetry.retryDelay');
 
+
+const checkBody = (body) => {
+  if (!body) {
+    throw new Error('body empty');
+  } else if (body.error) {
+    throw new Error(body.error);
+  } else if (body[0].errorCode) {
+    throw new Error(body[0].errorCode);
+  }
+};
+
 const defaultRetryStrategy = (err, response) =>
   (response && response.body && (response.statusCode < 200 || response.statusCode > 299));
 
@@ -38,6 +49,7 @@ const salesforce = async (baseUrl, path, query, method, headers, data, retry) =>
     return null;
   }
   if (body) {
+    checkBody(body);
     return body;
   }
   return null;
