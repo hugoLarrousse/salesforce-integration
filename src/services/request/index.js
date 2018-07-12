@@ -14,7 +14,7 @@ const checkBody = (body) => {
   } else if (body.error) {
     console.log('WTF2 :');
     throw new Error(body.error);
-  } else if (body[0].errorCode) {
+  } else if (body[0] && body[0].errorCode) {
     console.log('WTF3 :');
     throw new Error(body[0].errorCode);
   }
