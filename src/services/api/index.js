@@ -15,7 +15,9 @@ const {
 } = process.env;
 
 exports.getCredentials = (code) => {
+  console.log('AAAAAA 2 :');
   const queryCredentials = `grant_type=${grantType.credentials}&code=${code}&client_secret=${clientSecret}&client_id=${clientId}&redirect_uri=${redirectUri}`; // eslint-disable-line
+  console.log('queryCredentials :', queryCredentials);
   return request.salesforce(urlLogin, null, queryCredentials, 'POST', null, null, true);
 };
 
@@ -25,6 +27,8 @@ exports.refreshToken = (refreshToken) => {
 };
 
 exports.getInfoUser = (url, accessToken) => {
+  console.log('AAAAAA 7 :');
+  console.log('accessToken :', accessToken);
   return request.salesforce(url, null, null, 'GET', { Authorization: `Bearer ${accessToken}` }, null, true);
 };
 
