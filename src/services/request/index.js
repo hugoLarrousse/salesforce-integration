@@ -7,6 +7,7 @@ const RETRY_DELAY = config.get('requestRetry.retryDelay');
 
 const checkBody = (body) => {
   console.log('AAAAAA 3 8:');
+  console.log('body :', body);
   if (!body) {
     throw new Error('body empty');
   } else if (body.error) {
