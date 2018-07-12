@@ -22,7 +22,7 @@ const mongodbName = {
 
 const insert = async (databaseName, collectionName, doc) => {
   const docToSave = addCreatedAtToModel(doc);
-  const db = await mongodbName[databaseName];
+  const db = await mongodbName.salesforce;
   const response = await db.collection(collectionName).insertOne(docToSave);
   let insertedDoc;
   if (response.ops.length > 0) {
@@ -35,7 +35,7 @@ const insert = async (databaseName, collectionName, doc) => {
 
 const updateOne = async (databaseName, collectionName, query = {}, doc, options = {}) => {
   const docToUpdate = { $set: addUpdatedAtToModel(doc) };
-  const db = await mongodbName[databaseName];
+  const db = await mongodbName.salesforce;
   const docUpdated = await db.collection(collectionName)
     .findOneAndUpdate(
       {
@@ -58,7 +58,7 @@ const updateOne = async (databaseName, collectionName, query = {}, doc, options 
 
 const updateOneSalesforce = async (databaseName, collectionName, query = {}, doc, options = {}) => {
   const docToUpdate = { $set: doc };
-  const db = await mongodbName[databaseName];
+  const db = await mongodbName.salesforce;
   const docUpdated = await db.collection(collectionName)
     .updateOne(
       {
@@ -82,7 +82,7 @@ const updateOneSalesforce = async (databaseName, collectionName, query = {}, doc
 
 const update = async (databaseName, collectionName, query = {}, doc, options = {}) => {
   const docToUpdate = { $set: addUpdatedAtToModel(doc) };
-  const db = await mongodbName[databaseName];
+  const db = await mongodbName.salesforce;
   const updated = await db.collection(collectionName)
     .update(
       {
@@ -110,7 +110,7 @@ const softDeleteMany = async (databaseName, collectionName, query = {}) =>
   update(databaseName, collectionName, query, { deletedAt: Date.now() }, { multi: true });
 
 const deleteDoc = async (databaseName, collectionName, query) => {
-  const db = await mongodbName[databaseName];
+  const db = await mongodbName.salesforce;
   const deleted = await db.collection(collectionName).remove(query);
   if (deleted.result.ok === 1 && deleted.result.n >= 1) {
     // logger.infoDb(__filename, deleteDoc.name, databaseName, collectionName, `${query._id} was removed`, query._id);
@@ -121,13 +121,13 @@ const deleteDoc = async (databaseName, collectionName, query) => {
 };
 
 const findOne = async (databaseName, collectionName, query = {}) => {
-  const db = await mongodbName[databaseName];
+  const db = await mongodbName.salesforce;
   const docFound = await db.collection(collectionName).findOne({ ...query, ...softDeleteRetrieveCondition });
   return docFound;
 };
 
 const find = async (databaseName, collectionName, query = {}, sort = {}, limit = 0, offset = 0) => {
-  const db = await mongodbName[databaseName];
+  const db = await mongodbName.salesforce;
   const docs = await db.collection(collectionName)
     .find({
       ...query,
@@ -141,7 +141,7 @@ const find = async (databaseName, collectionName, query = {}, sort = {}, limit =
 };
 
 const count = async (databaseName, collectionName, query) => {
-  const db = await mongodbName[databaseName];
+  const db = await mongodbName.salesforce;
   return db.collection(collectionName)
     .count({
       ...query,
