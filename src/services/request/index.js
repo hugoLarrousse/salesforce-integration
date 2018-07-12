@@ -9,10 +9,13 @@ const checkBody = (body) => {
   console.log('AAAAAA 3 8:');
   console.log('body :', body);
   if (!body) {
+    console.log('WTF1 :');
     throw new Error('body empty');
   } else if (body.error) {
+    console.log('WTF2 :');
     throw new Error(body.error);
   } else if (body[0].errorCode) {
+    console.log('WTF3 :');
     throw new Error(body[0].errorCode);
   }
   console.log('AAAAAA 4 9:');
