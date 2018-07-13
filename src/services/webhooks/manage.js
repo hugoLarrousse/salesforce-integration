@@ -17,7 +17,6 @@ const deleteData = async (Id, dataType) => {
   if (!deleted) {
     throw new Error('nothing deleted');
   }
-  console.log('deleted :', deleted);
   await sendData.echoes({ toDelete: deleted });
 };
 
