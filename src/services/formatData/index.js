@@ -46,6 +46,7 @@ exports.coworkerInfo = (coworker, teamId) => {
 
 const formatWonLostOpportunity = async (docs, isInsert, user, allIntegrations) => {
   return Promise.all(docs.map(async (doc) => {
+    console.log('doc :', doc);
     const account = await mongo.findOne('salesforce', 'accounts', { Id: doc.AccountId });
     const status = doc.IsWon ? 'won' : 'lost';
     const timestampDate = new Date(doc.LastModifiedDate).getTime();
