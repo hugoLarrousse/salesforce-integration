@@ -37,7 +37,7 @@ exports.h7AccountTrigger = {
 };
 
 exports.h7UserTrigger = {
-  Body: `trigger h7UserTrigger on Account (after insert) {
+  Body: `trigger h7UserTrigger on User (after insert) {
     String url = '${baseUrlWebhook}/webhooks/user';
     String content = h7WebhookClass.jsonContent(Trigger.new, Trigger.old);
     h7WebhookClass.callout(url, content);
