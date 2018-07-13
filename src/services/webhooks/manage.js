@@ -93,7 +93,12 @@ exports.user = async (body) => {
     const userFound = await api.getOneUser(integrationInfo.instanceUrl, integrationInfo.token, 'users', newDoc[0].Id);
     if (userFound && userFound.records && userFound.length === 1) {
       const formattedUser = await formatData.coworkerInfo(userFound.records[0], integrationInfo.integrationTeam);
-      await sendData.user({ coworker: formattedUser, user });
+      await sendData.user({
+        coworker: formattedUser,
+        name: 'Salesforce',
+        user,
+        integrationInfo,
+      });
     }
   }
 };
