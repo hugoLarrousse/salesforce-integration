@@ -13,6 +13,7 @@ exports.apexClass = async (organisationInfo) => {
 
 exports.apexTrigger = async (organisationInfo) => {
   for (const trigger of triggersName) {
+    console.log('trigger :', trigger);
     const result = await api.postApexClass(organisationInfo.instance_url, organisationInfo.access_token, template[trigger]);
     if (!result.success) {
       throw new Error(result.errorCode);
