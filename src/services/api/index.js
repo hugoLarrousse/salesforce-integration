@@ -28,6 +28,11 @@ exports.getInfoUser = (url, accessToken) => {
   return request.salesforce(url, null, null, 'GET', { Authorization: `Bearer ${accessToken}` }, null, true);
 };
 
+exports.getOneUser = (baseUrl, accessToken, dataType, userId) => {
+  const fullQuery = `${query[dataType]}+where+Id='${userId}'`;
+  return request.salesforce(baseUrl, PATH_FOR_QUERY, fullQuery, 'GET', { Authorization: `Bearer ${accessToken}` }, null, true);
+};
+
 exports.getAllUsers = (baseUrl, accessToken, dataType, removeUserId) => {
   const fullQuery = removeUserId ? `${query[dataType]}+where+Id!='${removeUserId}'` : query[dataType];
   return request.salesforce(baseUrl, PATH_FOR_QUERY, fullQuery, 'GET', { Authorization: `Bearer ${accessToken}` }, null, true);
