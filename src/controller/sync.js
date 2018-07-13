@@ -38,6 +38,7 @@ router.get('/opportunities', async (req, res) => {
 });
 
 router.post('/', async (req, res) => {
+  console.log('IIII 1:');
   const { integrationInfo, user, allIntegrations } = req.body;
   try {
     check.integrationInfo(integrationInfo);
