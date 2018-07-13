@@ -29,8 +29,8 @@ exports.refreshToken = async (req, res, next) => {
   } else {
     const result = await api.refreshToken(integrationInfo.refreshToken);
     if (result && result.access_token) {
-      Object.assign(integrationInfo, { token: result.access_token, tokenExpiresAt: Date.now() + 86400000 });
-      sendData.integration({ integration: { _id: integrationInfo._id, token: result.access_token, tokenExpiresAt: Date.now() + 86400000 } });
+      Object.assign(integrationInfo, { token: result.access_token, tokenExpiresAt: Date.now() + 7200000 });
+      sendData.integration({ integration: { _id: integrationInfo._id, token: result.access_token, tokenExpiresAt: Date.now() + 7200000 } });
       req.body.integrationInfo = integrationInfo;
     }
     next();

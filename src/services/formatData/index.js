@@ -5,7 +5,7 @@ const credentials = (infoLogin) => {
   return {
     token: infoLogin.access_token,
     refreshToken: infoLogin.refresh_token,
-    tokenExpiresAt: Number(infoLogin.issued_at) + 86400000,
+    tokenExpiresAt: Number(infoLogin.issued_at) + 7200000,
     instanceUrl: infoLogin.instance_url,
   };
 };

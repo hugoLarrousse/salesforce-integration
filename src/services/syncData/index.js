@@ -22,7 +22,7 @@ const syncByType = async (integrationInfo, dataType, user, allIntegrations, spec
 exports.everything = async (integrationInfo, user, allIntegrations) => {
   await syncByType(integrationInfo, 'account');
   await Promise.all(['opportunity', 'task', 'event'].map(type => syncByType(integrationInfo, type, user, allIntegrations)));
-  sendData.integration({ integration: { _id: integrationInfo._id, tokenExpiresAt: Date.now() + 86400000 } });
+  sendData.integration({ integration: { _id: integrationInfo._id, tokenExpiresAt: Date.now() + 7200000 } });
 };
 
 exports.syncByType = syncByType;
