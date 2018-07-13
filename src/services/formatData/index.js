@@ -46,6 +46,7 @@ exports.coworkerInfo = (coworker, teamId) => {
 
 const formatWonLostOpportunity = async (docs, isInsert, user, allIntegrations) => {
   return Promise.all(docs.map(async (doc) => {
+    console.log('doc :', doc);
     const account = await mongo.findOne('salesforce', 'accounts', { Id: doc.AccountId });
     const status = doc.IsWon ? 'won' : 'lost';
     const timestampDate = new Date(doc.LastModifiedDate).getTime();
@@ -54,7 +55,7 @@ const formatWonLostOpportunity = async (docs, isInsert, user, allIntegrations) =
       ...model.type(`deal-${status}`),
       ...model.source(doc.Id, allIntegrations[0].integrationTeam, doc.OwnerId, doc.Id),
       ...model.description(doc.Name, doc.Description, `deal-${status}`),
-      ...model.finalClient(account.Name),
+      ...model.finalClient((account && account.Name) || null),
       ...model.parametres(doc.Amount, user.default_currency, doc.Id, status),
       ...model.timestamp(timestampDate, timestampDate, null, timestampDate, timestampDate),
       ...model.notify_users(isInsert),
@@ -73,7 +74,7 @@ const formatOpenedOpportunity = async (docs, isInsert, user, allIntegrations) =>
       ...model.type('deal-opened'),
       ...model.source(doc.Id, allIntegrations[0].integrationTeam, doc.OwnerId, doc.Id),
       ...model.description(doc.Name, doc.Description, 'deal-opened'),
-      ...model.finalClient(account.Name),
+      ...model.finalClient((account && account.Name) || null),
       ...model.parametres(doc.Amount, user.default_currency, doc.Id, status),
       ...model.timestamp(timestampDate, timestampDate, null, timestampDate, timestampExpectedDate),
       ...model.notify_users(isInsert),
@@ -90,7 +91,7 @@ const formatTask = (docs, isInsert, user, allIntegrations) => {
       ...model.type('call'),
       ...model.source(doc.Id, allIntegrations[0].integrationTeam, doc.OwnerId, doc.WhatId),
       ...model.description(doc.Subject, doc.Description, 'call'),
-      ...model.finalClient(account.Name),
+      ...model.finalClient((account && account.Name) || null),
       ...model.parametres(),
       ...model.timestamp(timestampDate, timestampDate, timestampDate, timestampDate),
       ...model.notify_users(isInsert),
@@ -106,7 +107,7 @@ const formatEvent = (docs, isInsert, user, allIntegrations) => {
       ...model.type('meeting'),
       ...model.source(doc.Id, allIntegrations[0].integrationTeam, doc.OwnerId, doc.WhatId),
       ...model.description(doc.Subject, doc.Description, 'meeting'),
-      ...model.finalClient(account.Name),
+      ...model.finalClient((account && account.Name) || null),
       ...model.parametres(),
       ...model.timestamp(
         new Date(doc.CreatedDate).getTime(),
@@ -120,6 +121,7 @@ const formatEvent = (docs, isInsert, user, allIntegrations) => {
 };
 
 exports.echoesInfo = async ({ arrayInsert, arrayUpdate }, dataType, user, allIntegrations) => {
+  console.log('dataType :', dataType);
   if (dataType === 'opportunity') {
     return {
       toInsert: await formatOpenedOpportunity(arrayInsert, true, user, allIntegrations),
