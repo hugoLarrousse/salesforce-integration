@@ -39,7 +39,7 @@ exports.refreshToken = async (req, res, next) => {
 
 exports.checkWebhook = (req, res, next) => {
   console.log('AAAAA inside');
-  
+
   res.status(200).send('ok');
   try {
     if (!req.body) {

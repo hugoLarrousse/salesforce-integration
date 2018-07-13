@@ -8,9 +8,7 @@ const webhooksController = require('./webhooks');
 
 const router = express.Router();
 
-router.all('/webhooks',  async (req, res) => {
-  console.log('aaaa :');
-});
+router.use('/webhooks', webhooksController);
 
 router.all('*', middleware.verifyToken);
 
