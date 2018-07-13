@@ -12,6 +12,10 @@ const port = 8079;
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
+app.all('webhooks/event', (req, res) => {
+  console.log('RRRRRRRRRRRRRRRRRR');
+})
+
 app.use('/', controller);
 
 app.all('*', (req, res) => {
