@@ -1,7 +1,7 @@
 const { baseUrlWebhook } = process.env;
 
 exports.h7OpportunityTrigger = {
-  Body: `trigger h7OpportunityTriggerTest on Opportunity (after insert, after update, after delete, after undelete) {}`,
+  Body: `trigger h7OpportunityTriggerTest on Opportunity (after insert, after update, after delete) {}`,
   TableEnumOrId: 'Opportunity',
 };
 
