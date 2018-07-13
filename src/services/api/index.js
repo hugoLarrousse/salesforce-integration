@@ -51,9 +51,6 @@ exports.getApexTrigger = (baseUrl, accessToken) => {
 };
 
 exports.postApexClass = (baseUrl, accessToken, data) => {
-  console.log('baseUrl :', baseUrl);
-  console.log('accessToken :', accessToken);
-  console.log('data :', data);
   return request.salesforce(baseUrl, '/services/data/v43.0/sobjects/ApexClass', query.apexClass, 'POST', {
     Authorization: `Bearer ${accessToken}`,
   }, data, true);

@@ -1,9 +1,9 @@
-const config = require('config');
+// const config = require('config');
 
 const api = require('../api');
 const create = require('./create');
 
-const triggerName = config.get('triggerName');
+// const triggerName = config.get('triggerName');
 
 const checkWebhooks = async (organisationInfo) => {
   const apexClass = await api.getApexClass(organisationInfo.instance_url, organisationInfo.access_token);
