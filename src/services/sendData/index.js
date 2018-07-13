@@ -11,3 +11,7 @@ exports.echoes = (data) => {
 exports.integration = (data) => {
   return request.salesforce(H7_URL, 'crm/integration', null, 'PUT', { Authorization: fixedToken }, data);
 };
+
+exports.user = (data) => {
+  return request.salesforce(H7_URL, 'crm/user', null, 'POST', { Authorization: fixedToken }, data);
+};
