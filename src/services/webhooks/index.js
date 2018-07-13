@@ -6,7 +6,9 @@ const create = require('./create');
 const triggerName = config.get('triggerName');
 
 const checkWebhooks = async (organisationInfo) => {
+  console.log('organisationInfo :', organisationInfo);
   const apexClass = await api.getApexClass(organisationInfo.instance_url, organisationInfo.access_token);
+  console.log('apexClass :', apexClass);
   if (apexClass.totalSize === 0) {
     return false;
   }
@@ -15,7 +17,7 @@ const checkWebhooks = async (organisationInfo) => {
   if (records.filter(record => triggerName.includes(record.Name)).length < 5) {
     return false;
   }
-  return true;
+  return false;
 };
 
 exports.set = async (organisationInfo) => {
@@ -23,7 +25,7 @@ exports.set = async (organisationInfo) => {
   if (isAlreadySet) {
     return;
   }
-  
+
   await create.apexClass(organisationInfo);
   await create.apexTrigger(organisationInfo);
 };
