@@ -11,14 +11,15 @@ const checkWebhooks = async (organisationInfo) => {
   if (apexClass.totalSize === 0) {
     return false;
   }
-
-  const apexTrigger = await api.getApexTrigger(organisationInfo.instance_url, organisationInfo.access_token);
-  const { records } = apexTrigger;
-
-  if (records.filter(record => triggerName.includes(record.Name)).length < 5) {
-    return false;
-  }
   return true;
+
+  // const apexTrigger = await api.getApexTrigger(organisationInfo.instance_url, organisationInfo.access_token);
+  // const { records } = apexTrigger;
+
+  // if (records.filter(record => triggerName.includes(record.Name)).length < 5) {
+  //   return false;
+  // }
+  // return true;
 };
 
 exports.set = async (organisationInfo) => {
