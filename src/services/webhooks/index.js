@@ -9,16 +9,16 @@ const checkWebhooks = async (organisationInfo) => {
   const apexClass = await api.getApexClass(organisationInfo.instance_url, organisationInfo.access_token);
 
   if (apexClass.totalSize === 0) {
-    return true;
+    return false;
   }
 
   const apexTrigger = await api.getApexTrigger(organisationInfo.instance_url, organisationInfo.access_token);
   const { records } = apexTrigger;
 
   if (records.filter(record => triggerName.includes(record.Name)).length < 5) {
-    return true;
+    return false;
   }
-  return false;
+  return true;
 };
 
 exports.set = async (organisationInfo) => {
