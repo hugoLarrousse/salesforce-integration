@@ -1,5 +1,10 @@
 const api = require('../services/api');
 const sendData = require('../services/sendData');
+const config = require('config');
+const request = require('../services/request');
+const logger = require('./logger');
+
+const H7_URL = config.get('h7Url');
 
 const { fixedToken } = process.env;
 
@@ -31,3 +36,24 @@ exports.refreshToken = async (req, res, next) => {
     next();
   }
 };
+
+exports.checkWebhook = (req, res, next) => {
+  res.status(200).send('ok');
+  try {
+    if (!req.body) {
+      throw new Error('no body');
+    }
+    if (!req.body.userId) {
+      throw new Error('no UserId');
+    }
+    const { integrationInfo, allIntegrations, user } = request.salesforce(H7_URL, 'crm/integration', `integrationId=${req.body.userId}`, 'GET', {
+      Authorization: fixedToken,
+    });
+    Object.assign(req.body, { integrationInfo, allIntegrations, user });
+    req.body.integrationInfo = integrationInfo;
+    next();
+  } catch (e) {
+    logger.error(__filename, '/checkWebhook', e.message);
+  }
+};
+

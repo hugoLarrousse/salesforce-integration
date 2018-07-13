@@ -4,7 +4,7 @@ exports.h7OpportunityTrigger = {
   Body: `trigger h7OpportunityTrigger on Opportunity (after insert, after update, after delete, after undelete) {
     String url = '${baseUrlWebhook}/webhooks/opportunity';
     String content = Webhook.jsonContent(Trigger.new, Trigger.old);
-    Webhook.callout(url, content);
+    h7WebhookClass.callout(url, content);
   }`,
   TableEnumOrId: 'Opportunity',
 };
@@ -13,7 +13,7 @@ exports.h7EventTrigger = {
   Body: `trigger h7EventTrigger on Event (after insert, after update, after delete, after undelete) {
     String url = '${baseUrlWebhook}/webhooks/event';
     String content = Webhook.jsonContent(Trigger.new, Trigger.old);
-    Webhook.callout(url, content);
+    h7WebhookClass.callout(url, content);
   }`,
   TableEnumOrId: 'Event',
 };
@@ -22,7 +22,7 @@ exports.h7TaskTrigger = {
   Body: `trigger h7TaskTrigger on Task (after insert, after update, after delete, after undelete) {
     String url = '${baseUrlWebhook}/webhooks/task';
     String content = Webhook.jsonContent(Trigger.new, Trigger.old);
-    Webhook.callout(url, content);
+    h7WebhookClass.callout(url, content);
   }`,
   TableEnumOrId: 'Task',
 };
@@ -31,7 +31,7 @@ exports.h7AccountTrigger = {
   Body: `trigger h7AccountTrigger on Account (after insert, after update) {
     String url = '${baseUrlWebhook}/webhooks/account';
     String content = Webhook.jsonContent(Trigger.new, Trigger.old);
-    Webhook.callout(url, content);
+    h7WebhookClass.callout(url, content);
   }`,
   TableEnumOrId: 'Account',
 };
@@ -40,7 +40,7 @@ exports.h7UserTrigger = {
   Body: `trigger h7UserTrigger on Account (after insert) {
     String url = '${baseUrlWebhook}/webhooks/user';
     String content = Webhook.jsonContent(Trigger.new, Trigger.old);
-    Webhook.callout(url, content);
+    h7WebhookClass.callout(url, content);
   }`,
   TableEnumOrId: 'User',
 };
