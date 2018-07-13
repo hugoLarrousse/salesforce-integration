@@ -4,16 +4,16 @@ const config = require('config');
 
 const triggersName = config.get('triggerName');
 
-exports.apexClass = async ({ instanceUrl, token }) => {
-  const result = await api.postApexClass(instanceUrl, token, template.h7WebhookClass);
+exports.apexClass = async (organisationInfo) => {
+  const result = await api.postApexClass(organisationInfo.instance_url, organisationInfo.access_token, template.h7WebhookClass);
   if (!result.success) {
     throw new Error(result.errorCode);
   }
 };
 
-exports.apexTrigger = async ({ instanceUrl, token }) => {
+exports.apexTrigger = async (organisationInfo) => {
   for (const trigger of triggersName) {
-    const result = await api.postApexClass(instanceUrl, token, template[trigger]);
+    const result = await api.postApexClass(organisationInfo.instance_url, organisationInfo.access_token, template[trigger]);
     if (!result.success) {
       throw new Error(result.errorCode);
     }

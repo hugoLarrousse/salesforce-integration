@@ -5,12 +5,12 @@ const create = require('./create');
 
 const triggerName = config.get('triggerName');
 
-const checkWebhooks = async ({ instanceUrl, token }) => {
-  const apexClass = await api.getApexClass(instanceUrl, token);
+const checkWebhooks = async (organisationInfo) => {
+  const apexClass = await api.getApexClass(organisationInfo.instance_url, organisationInfo.access_token);
   if (apexClass.totalSize === 0) {
     return false;
   }
-  const apexTrigger = await api.getApexTrigger(instanceUrl, token);
+  const apexTrigger = await api.getApexTrigger(organisationInfo.instance_url, organisationInfo.access_token);
   const { records } = apexTrigger;
   if (records.filter(record => triggerName.includes(record.Name)).length < 5) {
     return false;
@@ -23,6 +23,7 @@ exports.set = async (organisationInfo) => {
   if (isAlreadySet) {
     return;
   }
+  
   await create.apexClass(organisationInfo);
   await create.apexTrigger(organisationInfo);
 };
