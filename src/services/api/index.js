@@ -36,3 +36,23 @@ exports.getAllUsers = (baseUrl, accessToken, dataType, removeUserId) => {
 exports.getData = (baseUrl, accessToken, dataType) => {
   return request.salesforce(baseUrl, PATH_FOR_QUERY, query[dataType], 'GET', { Authorization: `Bearer ${accessToken}` }, null, true);
 };
+
+exports.getApexClass = (baseUrl, accessToken) => {
+  return request.salesforce(baseUrl, PATH_FOR_QUERY, query.apexClass, 'GET', { Authorization: `Bearer ${accessToken}` }, null, true);
+};
+
+exports.getApexTrigger = (baseUrl, accessToken) => {
+  return request.salesforce(baseUrl, PATH_FOR_QUERY, query.apexTrigger, 'GET', { Authorization: `Bearer ${accessToken}` }, null, true);
+};
+
+exports.postApexClass = (baseUrl, accessToken, data) => {
+  return request.salesforce(baseUrl, '/services/data/v43.0/sobjects/ApexClass', query.apexClass, 'POST', {
+    Authorization: `Bearer ${accessToken}`,
+  }, data, true);
+};
+
+exports.postApexTrigger = (baseUrl, accessToken, data) => {
+  return request.salesforce(baseUrl, '/services/data/v43.0/sobjects/ApexTrigger', query.apexTrigger, 'POST', {
+    Authorization: `Bearer ${accessToken}`,
+  }, data, true);
+};
