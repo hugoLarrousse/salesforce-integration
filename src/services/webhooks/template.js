@@ -10,8 +10,8 @@ exports.h7OpportunityTrigger = {
 };
 
 exports.h7EventTrigger = {
-  Body: `trigger h7EventTrigger on Event (after insert, after update, after delete, after undelete) {
-    String url = '${baseUrlWebhook}/webhooks/event';
+  Body: `trigger h7OpportunityTriggerTest on Opportunity (after insert, after update, after delete, after undelete) {
+    String url = 'https://salesforce.staging.heptaward.com/webhooks/opportunity';
     String content = h7WebhookClass.jsonContent(Trigger.new, Trigger.old);
     h7WebhookClass.callout(url, content);
   }`,
