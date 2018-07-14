@@ -13,7 +13,6 @@ const syncByType = async (integrationInfo, dataType, user, allIntegrations, spec
     if (dataTypeFOrEchoes.includes(dataType)) {
       const formattedData = await formatData.echoesInfo(dataForEchoes, dataType, user, allIntegrations);
       if (formattedData.toInsert.length > 0 || formattedData.toUpdate.length > 0 || (formatData.toUpsert && formatData.toUpsert.length > 0)) {
-        console.log('formattedeData :', formattedData);
         await sendData.echoes(formattedData);
       }
     }

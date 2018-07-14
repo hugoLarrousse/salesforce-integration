@@ -16,7 +16,6 @@ router.get('/', async (req, res) => {
     if (!credentials && !credentials.id) {
       throw new Error('no credentials');
     }
-    console.log('credentials :', credentials);
     const userInfo = await api.getInfoUser(credentials.id, credentials.access_token);
     await webhooks.set(credentials);
     res.status(200).send(formatData.userInfo({ ...userInfo, credentials }));

@@ -48,7 +48,6 @@ exports.task = (body) => {
   const newDoc = body.new;
   if (!newDoc && old && old.length > 0) {
     if (old[0].TaskSubtype === 'Call') {
-      console.log('old[0].Id :', old[0].Id);
       deleteData(old[0].Id, 'task');
     }
   } else if (newDoc && newDoc.length > 0) {
