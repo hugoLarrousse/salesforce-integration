@@ -38,7 +38,7 @@ exports.refreshToken = async (req, res, next) => {
   }
 };
 
-exports.checkWebhook = (req, res, next) => {
+exports.checkWebhook = async (req, res, next) => {
   console.log('AAAAA inside');
 
   res.status(200).send('ok');
@@ -49,13 +49,14 @@ exports.checkWebhook = (req, res, next) => {
     if (!req.body.userId) {
       throw new Error('no UserId');
     }
-    const { integrationInfo, allIntegrations, user } = request.salesforce(H7_URL, 'crm/integration', `integrationId=${req.body.userId}`, 'GET', {
+    const result = await request.salesforce(H7_URL, 'crm/integration', `integrationId=${req.body.userId}`, 'GET', {
       Authorization: fixedToken,
     });
     console.log('AAAAA inside 2');
-
-    Object.assign(req.body, { integrationInfo, allIntegrations, user });
-    req.body.integrationInfo = integrationInfo;
+    if (!result.integrationInfo || !result.allIntegrations || !result.user) {
+      throw new Error(result);
+    }
+    Object.assign(req.body, result);
     next();
   } catch (e) {
     logger.error(__filename, '/checkWebhook', e.message);
