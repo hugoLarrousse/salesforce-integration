@@ -29,6 +29,6 @@ exports.set = async (organisationInfo) => {
   }
 
   await create.apexClass(organisationInfo);
-  await create.RemoteProxy(organisationInfo);
+  await create.remoteProxy(organisationInfo);
   await create.apexTrigger(organisationInfo);
 };
