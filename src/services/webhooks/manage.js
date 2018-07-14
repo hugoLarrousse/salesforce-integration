@@ -51,7 +51,6 @@ exports.task = (body) => {
     }
   } else if (newDoc && newDoc.length > 0) {
     if (newDoc[0].TaskSubtype === 'Call') {
-      console.log('INSIDE :6');
       syncData.syncByType(integrationInfo, 'task', user, allIntegrations, 'taskRecent');
     }
   } else {

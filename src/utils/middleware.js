@@ -23,7 +23,6 @@ exports.verifyToken = (req, res, next) => {
 const checkTokenValid = (expirationDate) => Date.now() + 300000 < Number(expirationDate);
 
 exports.refreshToken = async (req, res, next) => {
-  console.log('AAAAA inside 3');
   const { integrationInfo } = req.body;
   if (integrationInfo && checkTokenValid(integrationInfo.tokenExpiresAt)) {
     next();
@@ -39,8 +38,6 @@ exports.refreshToken = async (req, res, next) => {
 };
 
 exports.checkWebhook = async (req, res, next) => {
-  console.log('AAAAA inside');
-
   res.status(200).send('ok');
   try {
     if (!req.body) {
