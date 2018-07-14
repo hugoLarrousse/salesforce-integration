@@ -16,8 +16,10 @@ router.post('/opportunity', async (req) => {
 });
 
 router.post('/task', async (req) => {
+  console.log('DANS LA MONEY 4');
   try {
     await manageWebhooks.task(req.body);
+    console.log('DANS LA MONEY 5');
   } catch (e) {
     logger.error(__filename, '/task', e.message);
   }

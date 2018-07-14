@@ -52,9 +52,8 @@ exports.checkWebhook = async (req, res, next) => {
     const result = await request.salesforce(H7_URL, 'crm/integration', `integrationId=${req.body.userId}`, 'GET', {
       Authorization: fixedToken,
     });
-    console.log('AAAAA inside 2');
     if (!result.integrationInfo || !result.allIntegrations || !result.user) {
-      throw new Error(result);
+      throw new Error('integration or user missing');
     }
     Object.assign(req.body, result);
     next();
