@@ -14,7 +14,7 @@ const collectionName = {
 
 const deleteData = async (Id, dataType) => {
   const deleted = await mongo.softDelete('salesforce', collectionName[dataType], { Id });
-  console.log('deleted :', deleted);
+  deleted.type = dataType === 'task' ? 'call' : dataType;
   if (!deleted) {
     throw new Error('nothing deleted');
   }
