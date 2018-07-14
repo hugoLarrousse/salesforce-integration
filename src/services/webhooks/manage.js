@@ -14,6 +14,7 @@ const collectionName = {
 
 const deleteData = async (Id, dataType) => {
   const deleted = await mongo.softDelete('salesforce', collectionName[dataType], { Id });
+  console.log('deleted :', deleted);
   if (!deleted) {
     throw new Error('nothing deleted');
   }
@@ -47,6 +48,7 @@ exports.task = (body) => {
   const newDoc = body.new;
   if (!newDoc && old && old.length > 0) {
     if (old[0].TaskSubtype === 'Call') {
+      console.log('old[0].Id :', old[0].Id);
       deleteData(old[0].Id, 'task');
     }
   } else if (newDoc && newDoc.length > 0) {
