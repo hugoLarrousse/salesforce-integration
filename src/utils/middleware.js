@@ -23,6 +23,7 @@ exports.verifyToken = (req, res, next) => {
 const checkTokenValid = (expirationDate) => Date.now() + 300000 < Number(expirationDate);
 
 exports.refreshToken = async (req, res, next) => {
+  console.log('AAAAA inside 3');
   const { integrationInfo } = req.body;
   if (integrationInfo && checkTokenValid(integrationInfo.tokenExpiresAt)) {
     next();
@@ -51,6 +52,8 @@ exports.checkWebhook = (req, res, next) => {
     const { integrationInfo, allIntegrations, user } = request.salesforce(H7_URL, 'crm/integration', `integrationId=${req.body.userId}`, 'GET', {
       Authorization: fixedToken,
     });
+    console.log('AAAAA inside 2');
+
     Object.assign(req.body, { integrationInfo, allIntegrations, user });
     req.body.integrationInfo = integrationInfo;
     next();
