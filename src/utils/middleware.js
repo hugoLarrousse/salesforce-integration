@@ -24,7 +24,7 @@ const checkTokenValid = (expirationDate) => Date.now() + 300000 < Number(expirat
 
 exports.refreshToken = async (req, res, next) => {
   const { integrationInfo } = req.body;
-  if (checkTokenValid(integrationInfo.tokenExpiresAt)) {
+  if (integrationInfo && checkTokenValid(integrationInfo.tokenExpiresAt)) {
     next();
   } else {
     const result = await api.refreshToken(integrationInfo.refreshToken);

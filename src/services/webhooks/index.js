@@ -29,6 +29,6 @@ exports.set = async (organisationInfo) => {
   }
 
   await create.apexClass(organisationInfo);
-  console.log('HALF');
+  await create.RemoteProxy(organisationInfo);
   await create.apexTrigger(organisationInfo);
 };

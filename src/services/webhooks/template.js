@@ -78,3 +78,14 @@ exports.h7WebhookClass = {
     }
   }`,
 };
+
+exports.h7RemoteSiteSettings = {
+  FullName: 'h7RemoteSiteSettings',
+  Metadata: {
+    disableProtocolSecurity: false,
+    isActive: true,
+    url: baseUrlWebhook,
+    urls: null,
+    description: 'H7 remote Site Settings',
+  },
+};

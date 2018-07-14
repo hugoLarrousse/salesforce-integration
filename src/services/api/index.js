@@ -61,3 +61,9 @@ exports.postApexTrigger = (baseUrl, accessToken, data) => {
     Authorization: `Bearer ${accessToken}`,
   }, data, true);
 };
+
+exports.postRemoteProxy = (baseUrl, accessToken, data) => {
+  return request.salesforce(baseUrl, '/services/data/v43.0/tooling/sobjects/RemoteProxy/', query.apexTrigger, 'POST', {
+    Authorization: `Bearer ${accessToken}`,
+  }, data, true);
+};
