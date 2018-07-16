@@ -25,6 +25,7 @@ exports.refreshToken = (refreshToken) => {
 };
 
 exports.getInfoUser = (url, accessToken) => {
+  console.log('accessToken :', accessToken);
   return request.salesforce(url, null, null, 'GET', { Authorization: `Bearer ${accessToken}` }, null, true);
 };
 
