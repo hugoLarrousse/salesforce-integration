@@ -2,6 +2,7 @@
 
 const api = require('../api');
 const create = require('./create');
+const logger = require('../../utils/logger');
 
 // const triggerName = config.get('triggerName');
 
@@ -23,12 +24,16 @@ const checkWebhooks = async (organisationInfo) => {
 };
 
 exports.set = async (organisationInfo) => {
-  const isAlreadySet = await checkWebhooks(organisationInfo);
-  if (isAlreadySet) {
-    return;
-  }
+  try {
+    const isAlreadySet = await checkWebhooks(organisationInfo);
+    if (isAlreadySet) {
+      return;
+    }
 
-  await create.apexClass(organisationInfo);
-  await create.remoteProxy(organisationInfo);
-  await create.apexTrigger(organisationInfo);
+    await create.apexClass(organisationInfo);
+    await create.remoteProxy(organisationInfo);
+    await create.apexTrigger(organisationInfo);
+  } catch (e) {
+    logger.error(__filename, 'set', e.message, organisationInfo);
+  }
 };

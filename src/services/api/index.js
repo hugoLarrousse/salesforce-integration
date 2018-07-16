@@ -25,7 +25,6 @@ exports.refreshToken = (refreshToken) => {
 };
 
 exports.getInfoUser = (url, accessToken) => {
-  console.log('accessToken :', accessToken);
   return request.salesforce(url, null, null, 'GET', { Authorization: `Bearer ${accessToken}` }, null, true);
 };
 
@@ -35,9 +34,7 @@ exports.getOneUser = (baseUrl, accessToken, dataType, userId) => {
 };
 
 exports.getAllUsers = (baseUrl, accessToken, dataType, removeUserId) => {
-  console.log('removeUserId :', removeUserId);
   const fullQuery = removeUserId ? `${query[dataType]}+where+Id!='${removeUserId}'` : query[dataType];
-  console.log('fullQuery :', fullQuery);
   return request.salesforce(baseUrl, PATH_FOR_QUERY, fullQuery, 'GET', { Authorization: `Bearer ${accessToken}` }, null, true);
 };
 
