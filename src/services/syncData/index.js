@@ -7,12 +7,20 @@ const dataTypeFOrEchoes = ['opportunity', 'task', 'event'];
 
 
 const syncByType = async (integrationInfo, dataType, user, allIntegrations, special) => {
+  console.log('AAAA3');
+  
   const results = await api.getData(integrationInfo.instanceUrl, integrationInfo.token, special || dataType);
+  console.log('AAAA4');
   if (results && results.records) {
+    console.log('AAAA5');
     const dataForEchoes = await saveData(dataType, results.records);
+    console.log('AAAA6');
     if (dataTypeFOrEchoes.includes(dataType)) {
+      console.log('AAAA7');
       const formattedData = await formatData.echoesInfo(dataForEchoes, dataType, user, allIntegrations);
+      console.log('AAAA8');
       if (formattedData.toInsert.length > 0 || formattedData.toUpdate.length > 0 || (formatData.toUpsert && formatData.toUpsert.length > 0)) {
+        console.log('AAAA9');
         await sendData.echoes(formattedData);
       }
     }
@@ -22,11 +30,8 @@ const syncByType = async (integrationInfo, dataType, user, allIntegrations, spec
 exports.everything = async (integrationInfo, user, allIntegrations) => {
   console.log('AAA 2 :');
   await syncByType(integrationInfo, 'account');
-  console.log('AAA 3 :');
   await Promise.all(['opportunity', 'task', 'event'].map(type => syncByType(integrationInfo, type, user, allIntegrations)));
-  console.log('AAA 4 :');
   sendData.integration({ integration: { _id: integrationInfo._id, tokenExpiresAt: Date.now() + 7200000 } });
-  console.log('AAA 5 :');
 };
 
 exports.syncByType = syncByType;
