@@ -17,9 +17,8 @@ router.get('/', async (req, res) => {
       throw new Error('no credentials');
     }
     const userInfo = await api.getInfoUser(credentials.id, credentials.access_token);
-    await webhooks.set(credentials);
-
     res.status(200).send(formatData.userInfo({ ...userInfo, credentials }));
+    webhooks.set(credentials);
   } catch (e) {
     logger.error(__filename, 'authentication', e.message);
     res.status(400).json(e.message);
