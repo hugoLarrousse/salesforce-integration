@@ -40,19 +40,14 @@ router.get('/opportunities', async (req, res) => {
 router.post('/', async (req, res) => {
   console.log('AAAA 1');
   const { integrationInfo, user, allIntegrations } = req.body;
-  console.log('AAA2 :');
   console.log('integrationInfo :', integrationInfo);
   console.log('user :', user);
-  console.log('allIntegrations :', allIntegrations);
   try {
     check.integrationInfo(integrationInfo);
-    console.log('AAA 3 :', );
     if (user && allIntegrations.length > 0) {
-      console.log('AAA 4 :');
       res.status(200).send('ok');
-      console.log('AAA 5 :', );
       await syncData.everything(integrationInfo, user, allIntegrations);
-      console.log('AAA 6 :', );
+      console.log('AAA 6 :');
     } else {
       console.log('ERROR USER OR ALL INTEGRATIONS :');
       res.status(400).send('ERROR USER OR ALL INTEGRATIONS');
