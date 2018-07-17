@@ -39,6 +39,10 @@ exports.getAllUsers = (baseUrl, accessToken, dataType, removeUserId) => {
 };
 
 exports.getData = (baseUrl, accessToken, dataType) => {
+  console.log('baseurl :', baseUrl);
+  console.log('accessToken :', accessToken);
+  console.log('dataType :', dataType);
+  
   return request.salesforce(baseUrl, PATH_FOR_QUERY, query[dataType], 'GET', { Authorization: `Bearer ${accessToken}` }, null, true);
 };
 
