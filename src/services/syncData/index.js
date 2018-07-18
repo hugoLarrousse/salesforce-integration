@@ -11,12 +11,12 @@ const syncByType = async (integrationInfo, dataType, user, allIntegrations, spec
   let urlPath = '';
   let results = null;
   do {
-    console.log('IN LOOP 1 7');
+    console.log('IN LOOP 1 8', dataType);
     if (!hasMore) {
       console.log('IN LOOP 2');
       results = await api.getData(integrationInfo.instanceUrl, integrationInfo.token, special || dataType);
     } else {
-      console.log('MORE 8');
+      console.log('MORE 9');
       console.log(urlPath);
       results = await api.getMoreData(integrationInfo.instanceUrl, integrationInfo.token, urlPath);
     }
@@ -32,6 +32,7 @@ const syncByType = async (integrationInfo, dataType, user, allIntegrations, spec
         if (formattedData.toInsert.length > 0 || formattedData.toUpdate.length > 0 || (formatData.toUpsert && formatData.toUpsert.length > 0)) {
           console.log('IN LOOP 6');
           await sendData.echoes(formattedData);
+          console.log('IN LOOP 7');
         }
       }
     }

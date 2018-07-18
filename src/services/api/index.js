@@ -42,6 +42,10 @@ exports.getData = (baseUrl, accessToken, dataType) => {
   return request.salesforce(baseUrl, PATH_FOR_QUERY, query[dataType], 'GET', { Authorization: `Bearer ${accessToken}` }, null, true);
 };
 
+exports.getMoreData = (baseUrl, accessToken, pathUrl) => {
+  return request.salesforce(baseUrl, pathUrl, null, 'GET', { Authorization: `Bearer ${accessToken}` }, null, true);
+};
+
 exports.getApexClass = (baseUrl, accessToken) => {
   return request.salesforce(baseUrl, PATH_FOR_QUERY, query.apexClass, 'GET', { Authorization: `Bearer ${accessToken}` }, null, true);
 };
