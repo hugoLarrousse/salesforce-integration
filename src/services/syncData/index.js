@@ -38,7 +38,7 @@ const syncByType = async (integrationInfo, dataType, user, allIntegrations, spec
     }
     console.log('results.done :', results.done);
     console.log('results.totalSize :', results.totalSize);
-    hasMore = (results && results.done) || false;
+    hasMore = (results && results.done === false) || false;
   } while (hasMore);
 };
 
