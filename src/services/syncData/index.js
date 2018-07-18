@@ -12,7 +12,6 @@ const syncByType = async (integrationInfo, dataType, user, allIntegrations, spec
   let results = null;
   do {
     console.log('IN LOOP 1 7');
-    
     if (!hasMore) {
       console.log('IN LOOP 2');
       results = await api.getData(integrationInfo.instanceUrl, integrationInfo.token, special || dataType);
@@ -24,6 +23,7 @@ const syncByType = async (integrationInfo, dataType, user, allIntegrations, spec
     if (results && results.records) {
       console.log('IN LOOP 3');
       urlPath = results.nextRecordsUrl;
+      console.log('urlPath :', urlPath);
       const dataForEchoes = await saveData(dataType, results.records);
       console.log('IN LOOP 4');
       if (dataTypeFOrEchoes.includes(dataType)) {
@@ -35,6 +35,8 @@ const syncByType = async (integrationInfo, dataType, user, allIntegrations, spec
         }
       }
     }
+    console.log('results.done :', results.done);
+    console.log('results.totalSize :', results.totalSize);
     hasMore = (results && results.done) || false;
   } while (hasMore);
 };
