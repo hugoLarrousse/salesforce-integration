@@ -34,6 +34,18 @@ const insert = async (databaseName, collectionName, doc) => {
   return insertedDoc;
 };
 
+const insertMany = async (databaseName, collectionName, docs) => {
+  const docsToSave = docs.map(doc => addCreatedAtToModel(doc));
+  const db = await mongodbName[databaseName];
+  const response = await db.collection(collectionName).insertMany(docsToSave);
+  if (response.ops.length > 0) {
+    return response.ops;
+    // logger.infoDb(__filename, insert.name, databaseName, collectionName, `${insertedDoc._id} inserted`, insertedDoc._id);
+  }
+  logger.errorDb(__filename, insert.name, databaseName, collectionName, 'Unable to insert', null, docsToSave);
+  return null;
+};
+
 const updateOne = async (databaseName, collectionName, query = {}, doc, options = {}) => {
   const docToUpdate = { $set: addUpdatedAtToModel(doc) };
   const db = await mongodbName[databaseName];
@@ -214,3 +226,4 @@ exports.updateOwnRules = updateOwnRules;
 exports.mongodbName = mongodbName;
 exports.findOneAndReplace = findOneAndReplace;
 exports.updateOneSalesforce = updateOneSalesforce;
+exports.insertMany = insertMany;

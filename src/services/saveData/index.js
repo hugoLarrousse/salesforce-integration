@@ -12,30 +12,28 @@ const collectionName = {
 
 module.exports = async (dataType, documents) => {
   const collection = collectionName[dataType] || null;
-  const arrayInsert = [];
-  const arrayUpdate = [];
-  for (const doc of documents) {
+
+  const Ids = documents.map(doc => doc.Id);
+  const IdsFound = await mongo.find(databaseSalesforce, collection, { id: { $in: Ids } }).map(docFound => docFound.Id);
+  const toInsert = documents.filter(doc => !IdsFound.includes(doc.Id));
+  const toUpdate = documents.filter(doc => IdsFound.includes(doc.Id));
+  for (const doc of toUpdate) {
     const filter = {
       id: doc.Id,
     };
     try {
-      const resultUpdate = await mongo.updateOneSalesforce(databaseSalesforce, collection, filter, doc, { upsert: true });
-      if (resultUpdate.upserted) {
-        arrayInsert.push(doc);
-      }
-      if (resultUpdate.nModified) {
-        arrayUpdate.push(doc);
-      }
+      await mongo.updateOne(databaseSalesforce, collection, filter, doc);
     } catch (e) {
       logger.errorDb(__filename, 'saveData', databaseSalesforce.name, collection, e.message, null, doc);
       return {
-        arrayInsert,
-        arrayUpdate,
+        arrayInsert: [],
+        arrayUpdate: [],
       };
     }
   }
+  await mongo.insertMany(databaseSalesforce, collection, toInsert);
   return {
-    arrayInsert,
-    arrayUpdate,
+    arrayInsert: toInsert,
+    arrayUpdate: toUpdate,
   };
 };
