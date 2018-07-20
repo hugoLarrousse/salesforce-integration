@@ -14,7 +14,8 @@ module.exports = async (dataType, documents) => {
   const collection = collectionName[dataType] || null;
 
   const Ids = documents.map(doc => doc.Id);
-  const IdsFound = await mongo.find(databaseSalesforce, collection, { id: { $in: Ids } }).map(docFound => docFound.Id);
+  const docsFound = await mongo.find(databaseSalesforce, collection, { id: { $in: Ids } });
+  const IdsFound = docsFound.map(docFound => docFound.Id);
   const toInsert = documents.filter(doc => !IdsFound.includes(doc.Id));
   const toUpdate = documents.filter(doc => IdsFound.includes(doc.Id));
   for (const doc of toUpdate) {
