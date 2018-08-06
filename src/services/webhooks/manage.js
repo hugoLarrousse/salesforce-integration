@@ -1,5 +1,5 @@
 const mongo = require('../../db/mongo');
-const sendData = require('../sendData');
+const heptawardApi = require('../heptawardApi');
 const syncData = require('../syncData');
 const api = require('../api');
 const formatData = require('../formatData');
@@ -18,7 +18,7 @@ const deleteData = async (Id, dataType) => {
   if (!deleted) {
     throw new Error('nothing deleted');
   }
-  await sendData.echoes({ toDelete: deleted });
+  await heptawardApi.echoes({ toDelete: deleted });
 };
 
 exports.opportunity = (body) => {
@@ -93,7 +93,7 @@ exports.user = async (body) => {
     const userFound = await api.getOneUser(integrationInfo.instanceUrl, integrationInfo.token, 'users', newDoc[0].Id);
     if (userFound && userFound.records && userFound.length === 1) {
       const formattedUser = await formatData.coworkerInfo(userFound.records[0], integrationInfo.integrationTeam);
-      await sendData.user({
+      await heptawardApi.user({
         coworker: formattedUser,
         name: 'Salesforce',
         user,

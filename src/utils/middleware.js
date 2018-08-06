@@ -1,5 +1,5 @@
 const api = require('../services/api');
-const sendData = require('../services/sendData');
+const heptawardApi = require('../services/heptawardApi');
 const config = require('config');
 const request = require('../services/request');
 const logger = require('./logger');
@@ -30,7 +30,7 @@ exports.refreshToken = async (req, res, next) => {
     const result = await api.refreshToken(integrationInfo.refreshToken);
     if (result && result.access_token) {
       Object.assign(integrationInfo, { token: result.access_token, tokenExpiresAt: Date.now() + 7200000 });
-      sendData.integration({ integration: { _id: integrationInfo._id, token: result.access_token, tokenExpiresAt: Date.now() + 7200000 } });
+      heptawardApi.integration({ integration: { _id: integrationInfo._id, token: result.access_token, tokenExpiresAt: Date.now() + 7200000 } });
       req.body.integrationInfo = integrationInfo;
     }
     next();
@@ -46,7 +46,7 @@ exports.checkWebhook = async (req, res, next) => {
     if (!req.body.userId) {
       throw new Error('no UserId');
     }
-    const result = await request.salesforce(H7_URL, 'crm/integration', `integrationId=${req.body.userId}`, 'GET', {
+    const result = await request.salesforce(H7_URL, `crm/integration/${req.body.userId}`, null, 'GET', {
       Authorization: fixedToken,
     });
     if (!result.integrationInfo || !result.allIntegrations || !result.user) {
