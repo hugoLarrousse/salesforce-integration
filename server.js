@@ -1,6 +1,11 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 
+setTimeout(() => {
+  require('./src/services/cron').cron();
+});
+
+
 require('dotenv').load({ path: '.env' });
 
 const controller = require('./src/controller');

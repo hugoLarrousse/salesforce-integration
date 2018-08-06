@@ -38,8 +38,16 @@ exports.getAllUsers = (baseUrl, accessToken, dataType, removeUserId) => {
   return request.salesforce(baseUrl, PATH_FOR_QUERY, fullQuery, 'GET', { Authorization: `Bearer ${accessToken}` }, null, true);
 };
 
-exports.getData = (baseUrl, accessToken, dataType) => {
-  return request.salesforce(baseUrl, PATH_FOR_QUERY, query[dataType], 'GET', { Authorization: `Bearer ${accessToken}` }, null, true);
+exports.getData = (baseUrl, accessToken, dataType, lastModifiedDateTZ) => {
+  const date = lastModifiedDateTZ || '';
+  return request.salesforce(baseUrl, PATH_FOR_QUERY, `${query[dataType]}${date}`, 'GET', { Authorization: `Bearer ${accessToken}` }, null, true);
+};
+
+exports.getCronData = (baseUrl, accessToken, dataType, lastModifiedDateTZ) => {
+  return request.salesforce(
+    baseUrl, PATH_FOR_QUERY, `${query[dataType]}${lastModifiedDateTZ}`,
+    'GET', { Authorization: `Bearer ${accessToken}` }, null, true
+  );
 };
 
 exports.getMoreData = (baseUrl, accessToken, pathUrl) => {
