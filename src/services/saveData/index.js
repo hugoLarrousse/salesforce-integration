@@ -14,13 +14,14 @@ module.exports = async (dataType, documents) => {
   const collection = collectionName[dataType] || null;
 
   const Ids = documents.map(doc => doc.Id);
-  const docsFound = await mongo.find(databaseSalesforce, collection, { id: { $in: Ids } });
+  const docsFound = await mongo.find(databaseSalesforce, collection, { Id: { $in: Ids } });
+
   const IdsFound = docsFound.map(docFound => docFound.Id);
   const toInsert = documents.filter(doc => !IdsFound.includes(doc.Id));
   const toUpdate = documents.filter(doc => IdsFound.includes(doc.Id));
   for (const doc of toUpdate) {
     const filter = {
-      id: doc.Id,
+      Id: doc.Id,
     };
     try {
       await mongo.updateOne(databaseSalesforce, collection, filter, doc);
@@ -32,7 +33,9 @@ module.exports = async (dataType, documents) => {
       };
     }
   }
-  await mongo.insertMany(databaseSalesforce, collection, toInsert);
+  if (toInsert.length > 0) {
+    await mongo.insertMany(databaseSalesforce, collection, toInsert);
+  }
   return {
     arrayInsert: toInsert,
     arrayUpdate: toUpdate,
