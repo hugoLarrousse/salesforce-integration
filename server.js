@@ -2,7 +2,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 
 setTimeout(() => {
-  require('./src/services/cron').cron();
+  require('./src/services/cron').cron(); // eslint-disable-line
 });
 
 
