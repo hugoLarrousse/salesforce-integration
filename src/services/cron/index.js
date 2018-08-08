@@ -36,6 +36,10 @@ const cronTask = async () => {
       const otherIntegrations = allInfoForCron.others.filter(other => String(other.orgaId) === String(integrationRefreshed.orgaId));
       const date = new Date(Date.now() - (10 * MS_PER_MINUTE));
       await syncData.syncByType(
+        integrationRefreshed, 'account', user, otherIntegrations,
+        'accountCron', `${date.toISOString().split('.')[0]}Z`
+      );
+      await syncData.syncByType(
         integrationRefreshed, 'opportunity', user, otherIntegrations,
         'opportunityCron', `${date.toISOString().split('.')[0]}Z`
       );
@@ -46,10 +50,6 @@ const cronTask = async () => {
       await syncData.syncByType(
         integrationRefreshed, 'event', user, otherIntegrations,
         'eventCron', `${date.toISOString().split('.')[0]}Z`
-      );
-      await syncData.syncByType(
-        integrationRefreshed, 'account', user, otherIntegrations,
-        'accountCron', `${date.toISOString().split('.')[0]}Z`
       );
     }
   } catch (e) {
