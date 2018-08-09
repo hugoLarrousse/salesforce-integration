@@ -23,7 +23,6 @@ const refreshToken = async (integrationInfo) => {
 
 
 const cronTask = async () => {
-  console.log('START cronTask :');
   try {
     const allInfoForCron = await heptawardApi.integrations();
     if (!allInfoForCron || !allInfoForCron.integrations || !allInfoForCron.others) {
@@ -53,7 +52,6 @@ const cronTask = async () => {
         'eventCron', `${date.toISOString().split('.')[0]}Z`, '/services/data/v43.0/queryAll/'
       );
     }
-    console.log('END cronTask :');
   } catch (e) {
     logger.error(__filename, 'cronTask', e.message);
   }
@@ -61,8 +59,7 @@ const cronTask = async () => {
 
 
 exports.cron = async () => {
-  cron.schedule('* * * * *', async () => {
-  // cron.schedule('*/3 * * * *', async () => {
+  cron.schedule('*/3 * * * *', async () => {
     await cronTask();
   });
 };

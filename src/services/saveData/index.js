@@ -12,7 +12,6 @@ const collectionName = {
 
 module.exports = async (dataType, documents) => {
   const collection = collectionName[dataType] || null;
-  console.log('collection :', collection);
 
   // manage toDelete doc
   const IdsToDelete = documents.map(doc => doc.IsDeleted && doc.Id);
