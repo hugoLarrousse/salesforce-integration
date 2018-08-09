@@ -23,6 +23,7 @@ const refreshToken = async (integrationInfo) => {
 
 
 const cronTask = async () => {
+  console.log('START cronTask :');
   try {
     const allInfoForCron = await heptawardApi.integrations();
     if (!allInfoForCron || !allInfoForCron.integrations || !allInfoForCron.others) {
@@ -37,21 +38,22 @@ const cronTask = async () => {
       const date = new Date(Date.now() - (10 * MS_PER_MINUTE));
       await syncData.syncByType(
         integrationRefreshed, 'account', user, otherIntegrations,
-        'accountCron', `${date.toISOString().split('.')[0]}Z`
+        'accountCron', `${date.toISOString().split('.')[0]}Z`, '/services/data/v43.0/queryAll/'
       );
       await syncData.syncByType(
         integrationRefreshed, 'opportunity', user, otherIntegrations,
-        'opportunityCron', `${date.toISOString().split('.')[0]}Z`
+        'opportunityCron', `${date.toISOString().split('.')[0]}Z`, '/services/data/v43.0/queryAll/'
       );
       await syncData.syncByType(
         integrationRefreshed, 'task', user, otherIntegrations,
-        'taskCron', `${date.toISOString().split('.')[0]}Z`
+        'taskCron', `${date.toISOString().split('.')[0]}Z`, '/services/data/v43.0/queryAll/'
       );
       await syncData.syncByType(
         integrationRefreshed, 'event', user, otherIntegrations,
-        'eventCron', `${date.toISOString().split('.')[0]}Z`
+        'eventCron', `${date.toISOString().split('.')[0]}Z`, '/services/data/v43.0/queryAll/'
       );
     }
+    console.log('END cronTask :');
   } catch (e) {
     logger.error(__filename, 'cronTask', e.message);
   }
@@ -59,7 +61,8 @@ const cronTask = async () => {
 
 
 exports.cron = async () => {
-  cron.schedule('*/3 * * * *', async () => {
+  cron.schedule('* * * * *', async () => {
+  // cron.schedule('*/3 * * * *', async () => {
     await cronTask();
   });
 };

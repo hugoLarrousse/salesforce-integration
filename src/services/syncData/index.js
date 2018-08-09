@@ -3,18 +3,19 @@ const saveData = require('../saveData');
 const formatData = require('../formatData');
 const heptawardApi = require('../heptawardApi');
 
-const dataTypeFOrEchoes = ['opportunity', 'task', 'event'];
+const dataTypeForEchoes = ['opportunity', 'task', 'event'];
 
-const syncByType = async (integrationInfo, dataType, user, allIntegrations, special, lastModifiedDateTZ) => {
+const syncByType = async (integrationInfo, dataType, user, allIntegrations, special, lastModifiedDateTZ, pathQuery) => {
   let hasMore = false;
   let urlPath = '';
   let results = null;
   do {
     if (!hasMore) {
-      results = await api.getData(integrationInfo.instanceUrl, integrationInfo.token, special || dataType, lastModifiedDateTZ);
+      results = await api.getData(integrationInfo.instanceUrl, integrationInfo.token, special || dataType, lastModifiedDateTZ, pathQuery);
     } else {
       results = await api.getMoreData(integrationInfo.instanceUrl, integrationInfo.token, urlPath);
     }
+
     if (results && results.records && results.records.length > 0) {
       urlPath = results.nextRecordsUrl;
       const dataForEchoes = await saveData(dataType, results.records.map(record => {
@@ -23,10 +24,13 @@ const syncByType = async (integrationInfo, dataType, user, allIntegrations, spec
           teamId: integrationInfo.integrationTeam,
         };
       }));
-      if (dataTypeFOrEchoes.includes(dataType)) {
+      if (dataTypeForEchoes.includes(dataType)) {
         const formattedData = await formatData.echoesInfo(dataForEchoes, dataType, user, allIntegrations);
 
-        if (formattedData.toInsert.length > 0 || formattedData.toUpdate.length > 0 || (formatData.toUpsert && formatData.toUpsert.length > 0)) {
+        if (formattedData.toInsert.length > 0
+          || formattedData.toUpdate.length > 0
+          || (formattedData.toUpsert && formattedData.toUpsert.length > 0)
+          || (formattedData.toDelete && formattedData.toDelete.length > 0)) {
           await heptawardApi.echoes(formattedData);
         }
       }

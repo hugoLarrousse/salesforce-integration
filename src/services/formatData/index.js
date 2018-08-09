@@ -119,22 +119,40 @@ const formatEvent = (docs, isInsert, user, allIntegrations) => {
   }));
 };
 
-exports.echoesInfo = async ({ arrayInsert, arrayUpdate }, dataType, user, allIntegrations) => {
+const typeForDeletion = {
+  opportunity: ['deal-opened', 'deal-won', 'deal-lost'],
+  task: 'call',
+  event: 'meeting',
+};
+
+const formatForDeletion = (docs, dataType) => {
+  return docs.map((doc) => {
+    return {
+      id: doc.Id,
+      type: typeForDeletion[dataType],
+    };
+  });
+};
+
+exports.echoesInfo = async ({ arrayInsert, arrayUpdate, arrayDelete }, dataType, user, allIntegrations) => {
   if (dataType === 'opportunity') {
     return {
       toInsert: await formatOpenedOpportunity(arrayInsert, true, user, allIntegrations),
       toUpdate: await formatOpenedOpportunity(arrayUpdate, false, user, allIntegrations),
       toUpsert: await formatWonLostOpportunity([...arrayInsert, ...arrayUpdate].filter(data => data.IsClosed), false, user, allIntegrations),
+      toDelete: formatForDeletion(arrayDelete, dataType),
     };
   } else if (dataType === 'task') {
     return {
       toInsert: await formatTask(arrayInsert, true, user, allIntegrations),
       toUpdate: await formatTask(arrayUpdate, false, user, allIntegrations),
+      toDelete: formatForDeletion(arrayDelete, dataType),
     };
   } else if (dataType === 'event') {
     return {
       toInsert: await formatEvent(arrayInsert, true, user, allIntegrations),
       toUpdate: await formatEvent(arrayUpdate, false, user, allIntegrations),
+      toDelete: formatForDeletion(arrayDelete, dataType),
     };
   }
   return null;
