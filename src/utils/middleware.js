@@ -20,11 +20,11 @@ exports.verifyToken = (req, res, next) => {
   }
 };
 
-const checkTokenValid = (expirationDate) => Date.now() + 300000 < Number(expirationDate);
+const isTokenValid = (expirationDate) => Date.now() - 300000 < Number(expirationDate);
 
 exports.refreshToken = async (req, res, next) => {
   const { integrationInfo } = req.body;
-  if (integrationInfo && checkTokenValid(integrationInfo.tokenExpiresAt)) {
+  if (integrationInfo && isTokenValid(integrationInfo.tokenExpiresAt)) {
     next();
   } else {
     const result = await api.refreshToken(integrationInfo.refreshToken);

@@ -6,10 +6,10 @@ const logger = require('../../utils/logger');
 
 const MS_PER_MINUTE = 60000;
 
-const checkTokenValid = (expirationDate) => Date.now() + 300000 < Number(expirationDate);
+const isTokenValid = (expirationDate) => Date.now() - 300000 < Number(expirationDate);
 
 const refreshToken = async (integrationInfo) => {
-  if (integrationInfo && checkTokenValid(integrationInfo.tokenExpiresAt)) {
+  if (integrationInfo && isTokenValid(integrationInfo.tokenExpiresAt)) {
     return integrationInfo;
   }
   const result = await api.refreshToken(integrationInfo.refreshToken);
