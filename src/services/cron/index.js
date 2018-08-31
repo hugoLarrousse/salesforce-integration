@@ -9,10 +9,13 @@ const MS_PER_MINUTE = 60000;
 const isTokenValid = (expirationDate) => Date.now() - 300000 < Number(expirationDate);
 
 const refreshToken = async (integrationInfo) => {
+  console.log('1 :');
   if (integrationInfo && isTokenValid(integrationInfo.tokenExpiresAt)) {
     return integrationInfo;
   }
+  console.log('2 :');
   const result = await api.refreshToken(integrationInfo.refreshToken);
+  console.log('3 :');
   if (result && result.access_token) {
     Object.assign(integrationInfo, { token: result.access_token, tokenExpiresAt: Date.now() + 7200000 });
     heptawardApi.integration({ integration: { _id: integrationInfo._id, token: result.access_token, tokenExpiresAt: Date.now() + 7200000 } });

@@ -15,10 +15,12 @@ const checkBody = (body) => {
   }
 };
 
-const defaultRetryStrategy = (err, response) =>
-  (response && response.body && (response.statusCode < 200 || response.statusCode > 299));
+const defaultRetryStrategy = (err, response) => {
+  console.log('response.bodyAA :', response.body);
+  return (response && response.body && (response.statusCode < 200 || response.statusCode > 299));
+}
 
-const salesforce = async (baseUrl, path, query, method, headers, data, retry) => {
+const salesforce = async (baseUrl, path, query, method, headers, data, retry, test) => {
   const options = {
     method,
     url: `${baseUrl}${path ? `/${path}` : ''}${query ? `?${query}` : ''}`,
@@ -33,7 +35,14 @@ const salesforce = async (baseUrl, path, query, method, headers, data, retry) =>
   if (retry) {
     Object.assign(options, { maxAttempts: MAX_ATTEMPTS, retryDelay: RETRY_DELAY, retryStrategy: defaultRetryStrategy });
   }
+
+  if (test) {
+    console.log('options :', options);
+  }
+
   const { error, response, body } = await requestRetry(options);
+  console.log('error :', error);
+  console.log('body', body);
   if (error) {
     console.log('error:', error);
     return null;
