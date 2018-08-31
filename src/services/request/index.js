@@ -9,18 +9,16 @@ const checkBody = (body) => {
   if (!body) {
     throw new Error('body empty');
   } else if (body.error) {
-    throw new Error(body.error);
+    throw new Error(`${body.error} : ${body.error_description || ''}`);
   } else if (body[0] && body[0].errorCode) {
     throw new Error(body[0].errorCode);
   }
 };
 
-const defaultRetryStrategy = (err, response) => {
-  console.log('response.bodyAA :', response.body);
-  return (response && response.body && (response.statusCode < 200 || response.statusCode > 299));
-}
+const defaultRetryStrategy = (err, response) =>
+  (response && response.body && (response.statusCode < 200 || response.statusCode > 299));
 
-const salesforce = async (baseUrl, path, query, method, headers, data, retry, test) => {
+const salesforce = async (baseUrl, path, query, method, headers, data, retry) => {
   const options = {
     method,
     url: `${baseUrl}${path ? `/${path}` : ''}${query ? `?${query}` : ''}`,
@@ -36,16 +34,10 @@ const salesforce = async (baseUrl, path, query, method, headers, data, retry, te
     Object.assign(options, { maxAttempts: MAX_ATTEMPTS, retryDelay: RETRY_DELAY, retryStrategy: defaultRetryStrategy });
   }
 
-  if (test) {
-    console.log('options :', options);
-  }
-
   const { error, response, body } = await requestRetry(options);
-  console.log('error :', error);
-  console.log('body', body);
+
   if (error) {
-    console.log('error:', error);
-    return null;
+    throw new Error(error);
   }
   if (response && response.statusCode && response.statusCode === 400) {
     console.log('statusCode:', response && response.statusCode);
