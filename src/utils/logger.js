@@ -19,7 +19,7 @@ const transports = [
 if (env === 'production') {
   transports.push(new (WinstonSlack)({
     hookUrl: process.env.slackUrl,
-    username: 'Jean-Louis',
+    username: 'Michelle Obama',
     channel: '#error-heptaward',
     level: 'error',
   }));
