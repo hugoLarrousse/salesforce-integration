@@ -20,7 +20,7 @@ if (env === 'production') {
   transports.push(new (WinstonSlack)({
     hookUrl: process.env.slackUrl,
     username: 'Michelle Obama',
-    channel: '#error-heptaward',
+    channel: '#error-salesforce',
     level: 'error',
   }));
 }
