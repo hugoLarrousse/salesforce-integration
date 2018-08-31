@@ -21,6 +21,7 @@ exports.getCredentials = (code) => {
 
 exports.refreshToken = (refreshToken) => {
   const queryRefreshToken = `grant_type=${grantType.refreshToken}&refresh_token=${refreshToken}&client_secret=${clientSecret}&client_id=${clientId}`; // eslint-disable-line
+  console.log('queryRefreshToken :', queryRefreshToken);
   return request.salesforce(urlLogin, null, queryRefreshToken, 'POST', null, null, true);
 };
 

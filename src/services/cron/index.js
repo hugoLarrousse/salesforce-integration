@@ -25,32 +25,39 @@ const refreshToken = async (integrationInfo) => {
 const cronTask = async () => {
   try {
     const allInfoForCron = await heptawardApi.integrations();
+    console.log('1 :');
     if (!allInfoForCron || !allInfoForCron.integrations || !allInfoForCron.others) {
       throw new Error('No integrations');
     }
-
+    console.log('2 :');
     for (const integration of allInfoForCron.integrations) {
       const { user } = integration;
       const integrationRefreshed = await refreshToken(integration);
+      console.log('3 :');
 
       const otherIntegrations = allInfoForCron.others.filter(other => String(other.orgaId) === String(integrationRefreshed.orgaId));
+      console.log('4 :');
       const date = new Date(Date.now() - (10 * MS_PER_MINUTE));
       await syncData.syncByType(
         integrationRefreshed, 'account', user, otherIntegrations,
         'accountCron', `${date.toISOString().split('.')[0]}Z`, '/services/data/v43.0/queryAll/'
       );
+      console.log('5 :');
       await syncData.syncByType(
         integrationRefreshed, 'opportunity', user, otherIntegrations,
         'opportunityCron', `${date.toISOString().split('.')[0]}Z`, '/services/data/v43.0/queryAll/'
       );
+      console.log('6 :');
       await syncData.syncByType(
         integrationRefreshed, 'task', user, otherIntegrations,
         'taskCron', `${date.toISOString().split('.')[0]}Z`, '/services/data/v43.0/queryAll/'
       );
+      console.log('7 :');
       await syncData.syncByType(
         integrationRefreshed, 'event', user, otherIntegrations,
         'eventCron', `${date.toISOString().split('.')[0]}Z`, '/services/data/v43.0/queryAll/'
       );
+      console.log('8 :');
     }
   } catch (e) {
     logger.error(__filename, 'cronTask', e.message);
