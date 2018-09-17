@@ -23,7 +23,7 @@ exports.userInfo = (infoUser) => {
     // admin
     phone: infoUser.mobile_phone,
     // teamName
-    iconUrl: infoUser.photos.picture.split('profilephoto/')[1].length > 8 ? infoUser.photos.picture : null,
+    // iconUrl: infoUser.photos.picture.split('profilephoto/')[1].length > 8 ? infoUser.photos.picture : null,
     default_currency: currency[infoUser.locale.split('_')[2]] || 'USD',
     credentials: credentials(infoUser.credentials),
   };
@@ -40,7 +40,7 @@ exports.coworkerInfo = (coworker, teamId) => {
     lang: coworker.LanguageLocaleKey ? coworker.LanguageLocaleKey.split('_')[0] : null,
     default_currency: coworker.LocaleSidKey ? (currency[coworker.LocaleSidKey.split('_')[2]] || 'USD') : null,
     admin: coworker.ReceivesAdminInfoEmails,
-    iconUrl: coworker.FullPhotoUrl.split('profilephoto/')[1].length > 8 ? coworker.FullPhotoUrl : null,
+    // iconUrl: coworker.FullPhotoUrl.split('profilephoto/')[1].length > 8 ? coworker.FullPhotoUrl : null,
   };
 };
 
