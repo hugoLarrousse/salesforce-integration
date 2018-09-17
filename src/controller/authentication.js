@@ -1,7 +1,7 @@
 const express = require('express');
 const api = require('../services/api');
 const formatData = require('../services/formatData');
-const webhooks = require('../services/webhooks');
+// const webhooks = require('../services/webhooks');
 const logger = require('../utils/logger');
 
 const router = express.Router();
@@ -18,7 +18,7 @@ router.get('/', async (req, res) => {
     }
     const userInfo = await api.getInfoUser(credentials.id, credentials.access_token);
     res.status(200).send(formatData.userInfo({ ...userInfo, credentials }));
-    webhooks.set(credentials);
+    // webhooks.set(credentials);
   } catch (e) {
     logger.error(__filename, 'authentication', e.message);
     res.status(400).json(e.message);
