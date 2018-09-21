@@ -44,11 +44,28 @@ exports.coworkerInfo = (coworker, teamId) => {
   };
 };
 
+const isToday = (date1, date2) => {
+  const year = date1.getFullYear() === date2.getFullYear();
+  const month = date1.getMonth() === date2.getMonth();
+  const day = date1.getDate() === date2.getDate();
+  return (year && month && day) || false;
+};
+
+const formatWonLostDate = (close, lastModified) => {
+  const closeDate = new Date(close);
+  const lastModifiedDate = new Date(lastModified);
+  if (isToday(closeDate, lastModifiedDate)) {
+    return lastModifiedDate.getTime();
+  }
+  return closeDate.setHours(12);
+};
+
 const formatWonLostOpportunity = async (docs, isInsert, user, allIntegrations) => {
   return Promise.all(docs.map(async (doc) => {
     const account = await mongo.findOne('salesforce', 'accounts', { Id: doc.AccountId });
     const status = doc.IsWon ? 'won' : 'lost';
-    const timestampDate = new Date(doc.LastModifiedDate).getTime();
+    // const timestampDate = new Date(doc.LastModifiedDate).getTime();
+    const timestampDate = formatWonLostDate(new Date(doc.CloseDate), doc.LastModifiedDate);
     return {
       ...model.h7Info(doc.OwnerId, allIntegrations, user.team_id),
       ...model.type(`deal-${status}`),
