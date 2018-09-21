@@ -1,5 +1,6 @@
 const mongo = require('../../db/mongo');
 const model = require('./model');
+const logger = require('../../utils/logger');
 
 const credentials = (infoLogin) => {
   return {
@@ -52,12 +53,17 @@ const isToday = (date1, date2) => {
 };
 
 const formatWonLostDate = (close, lastModified) => {
-  const closeDate = new Date(close);
-  const lastModifiedDate = new Date(lastModified);
-  if (isToday(closeDate, lastModifiedDate)) {
-    return lastModifiedDate.getTime();
+  try {
+    const closeDate = new Date(close);
+    const lastModifiedDate = new Date(lastModified);
+    if (isToday(closeDate, lastModifiedDate)) {
+      return lastModifiedDate.getTime();
+    }
+    return closeDate.setHours(12);
+  } catch (e) {
+    logger.error(__filename, formatWonLostDate, e.message);
+    return new Date(lastModified).getTime();
   }
-  return closeDate.setHours(12);
 };
 
 const formatWonLostOpportunity = async (docs, isInsert, user, allIntegrations) => {
@@ -65,7 +71,7 @@ const formatWonLostOpportunity = async (docs, isInsert, user, allIntegrations) =
     const account = await mongo.findOne('salesforce', 'accounts', { Id: doc.AccountId });
     const status = doc.IsWon ? 'won' : 'lost';
     // const timestampDate = new Date(doc.LastModifiedDate).getTime();
-    const timestampDate = formatWonLostDate(new Date(doc.CloseDate), doc.LastModifiedDate);
+    const timestampDate = formatWonLostDate(doc.CloseDate, doc.LastModifiedDate);
     return {
       ...model.h7Info(doc.OwnerId, allIntegrations, user.team_id),
       ...model.type(`deal-${status}`),
