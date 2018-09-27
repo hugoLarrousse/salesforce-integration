@@ -28,6 +28,7 @@ const cronTask = async () => {
     if (!allInfoForCron || !allInfoForCron.integrations || !allInfoForCron.others) {
       throw new Error('No integrations');
     }
+    console.log('allInfoForCron :', allInfoForCron);
     for (const integration of allInfoForCron.integrations) {
       console.log('1 :');
       const { user } = integration;
@@ -35,6 +36,7 @@ const cronTask = async () => {
       const integrationRefreshed = await refreshToken(integration);
       console.log('3 :');
       const otherIntegrations = allInfoForCron.others.filter(other => String(other.orgaId) === String(integrationRefreshed.orgaId));
+      console.log('otherIntegrations :', otherIntegrations);
       console.log('4 :');
       const date = new Date(Date.now() - (10 * MS_PER_MINUTE));
       await syncData.syncByType(
