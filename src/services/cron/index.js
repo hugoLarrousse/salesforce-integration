@@ -64,7 +64,7 @@ const cronTask = async () => {
 
 
 exports.cron = async () => {
-  cron.schedule('*/3 * * * *', async () => {
+  cron.schedule('*/2 * * * *', async () => {
     await cronTask();
   });
 };
