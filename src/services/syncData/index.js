@@ -11,9 +11,7 @@ const syncByType = async (integrationInfo, dataType, user, allIntegrations, spec
   let results = null;
   do {
     if (!hasMore) {
-      console.log('AAA');
       results = await api.getData(integrationInfo.instanceUrl, integrationInfo.token, special || dataType, lastModifiedDateTZ, pathQuery);
-      console.log('BBB');
     } else {
       results = await api.getMoreData(integrationInfo.instanceUrl, integrationInfo.token, urlPath);
     }
