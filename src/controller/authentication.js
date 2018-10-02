@@ -14,7 +14,7 @@ router.get('/', async (req, res) => {
     }
     console.log('code :', code);
     const credentials = await api.getCredentials(code);
-    if (!credentials && !credentials.id) {
+    if (!credentials || !credentials.id) {
       throw new Error('no credentials');
     }
     const userInfo = await api.getInfoUser(credentials.id, credentials.access_token);
