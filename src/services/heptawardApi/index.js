@@ -5,6 +5,7 @@ const H7_URL = config.get('h7Url');
 const { fixedToken } = process.env;
 
 exports.echoes = (data) => {
+  console.log('data :', data);
   return request.salesforce(H7_URL, 'crm/echoes', null, 'POST', { Authorization: fixedToken }, data);
 };
 
