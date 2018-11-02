@@ -12,7 +12,7 @@ router.get('/', async (req, res) => {
     if (!code) {
       throw new Error('code is missing');
     }
-    console.log('code :', code);
+
     const credentials = await api.getCredentials(code);
     if (!credentials || !credentials.id) {
       throw new Error('no credentials');

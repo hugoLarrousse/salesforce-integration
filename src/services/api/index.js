@@ -16,7 +16,6 @@ const {
 
 exports.getCredentials = (code) => {
   const queryCredentials = `grant_type=${grantType.credentials}&code=${code}&client_secret=${clientSecret}&client_id=${clientId}&redirect_uri=${redirectUri}`; // eslint-disable-line
-  console.log('queryCredential :', queryCredentials);
   return request.salesforce(urlLogin, null, queryCredentials, 'POST', null, null, true);
 };
 
