@@ -9,16 +9,20 @@ const MS_PER_MINUTE = 60000;
 const isTokenValid = (expirationDate) => Date.now() - 300000 < Number(expirationDate);
 
 const refreshToken = async (integrationInfo) => {
-  if (integrationInfo && isTokenValid(integrationInfo.tokenExpiresAt)) {
-    return integrationInfo;
+  try {
+    if (integrationInfo && isTokenValid(integrationInfo.tokenExpiresAt)) {
+      return integrationInfo;
+    }
+    const result = await api.refreshToken(integrationInfo.refreshToken);
+    if (result && result.access_token) {
+      Object.assign(integrationInfo, { token: result.access_token, tokenExpiresAt: Date.now() + 7200000 });
+      heptawardApi.integration({ integration: { _id: integrationInfo._id, token: result.access_token, tokenExpiresAt: Date.now() + 7200000 } });
+      return integrationInfo;
+    }
+    throw new Error('Error refresh Token');
+  } catch (e) {
+    throw new Error(`${__filename}, refreshtoken, ${e.message}`);
   }
-  const result = await api.refreshToken(integrationInfo.refreshToken);
-  if (result && result.access_token) {
-    Object.assign(integrationInfo, { token: result.access_token, tokenExpiresAt: Date.now() + 7200000 });
-    heptawardApi.integration({ integration: { _id: integrationInfo._id, token: result.access_token, tokenExpiresAt: Date.now() + 7200000 } });
-    return integrationInfo;
-  }
-  throw new Error('Error refresh Token');
 };
 
 
