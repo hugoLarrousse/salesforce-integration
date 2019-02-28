@@ -12,7 +12,10 @@ const syncByType = async (integrationInfo, dataType, user, allIntegrations, spec
     let results = null;
     do {
       if (!hasMore) {
-        results = await api.getData(integrationInfo.instanceUrl, integrationInfo.token, special || dataType, lastModifiedDateTZ, pathQuery);
+        results = await api.getData(
+          integrationInfo.instanceUrl, integrationInfo.token, special || dataType,
+          lastModifiedDateTZ, pathQuery, integrationInfo.restrictions
+        );
       } else {
         results = await api.getMoreData(integrationInfo.instanceUrl, integrationInfo.token, urlPath);
       }

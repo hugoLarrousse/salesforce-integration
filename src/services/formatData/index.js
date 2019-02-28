@@ -181,3 +181,12 @@ exports.echoesInfo = async ({ arrayInsert, arrayUpdate, arrayDelete }, dataType,
   return null;
 };
 
+exports.formatQuery = (query, date, restrictions) => {
+  let queryToFormat = query;
+  for (const restriction of restrictions) {
+    queryToFormat = queryToFormat.replace(`,${restriction}`, '');
+  }
+  console.log(`${queryToFormat}${date}`);
+  return `${queryToFormat}${date}`;
+};
+

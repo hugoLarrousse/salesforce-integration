@@ -2,6 +2,7 @@ const config = require('config');
 
 const request = require('../request');
 const query = require('./query');
+const formatData = require('../formatData');
 
 const grantType = config.get('grantType');
 
@@ -38,11 +39,12 @@ exports.getAllUsers = (baseUrl, accessToken, dataType, removeUserId) => {
   return request.salesforce(baseUrl, PATH_FOR_QUERY, fullQuery, 'GET', { Authorization: `Bearer ${accessToken}` }, null, true);
 };
 
-exports.getData = (baseUrl, accessToken, dataType, lastModifiedDateTZ, pathQuery) => {
+exports.getData = (baseUrl, accessToken, dataType, lastModifiedDateTZ, pathQuery, restrictions) => {
   const date = lastModifiedDateTZ || '';
   return request.salesforce(
     baseUrl, pathQuery || PATH_FOR_QUERY,
-    `${query[dataType]}${date}`, 'GET', { Authorization: `Bearer ${accessToken}` }, null, true
+    restrictions ? formatData.formatQuery(query[dataType], date, restrictions) : `${query[dataType]}${date}`,
+    'GET', { Authorization: `Bearer ${accessToken}` }, null, true
   );
 };
 
