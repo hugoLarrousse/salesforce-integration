@@ -66,6 +66,7 @@ const formatWonLostDate = (close, lastModified) => {
   }
 };
 
+// to be changed (amount)
 const formatWonLostOpportunity = async (docs, isInsert, user, allIntegrations) => {
   return Promise.all(docs.map(async (doc) => {
     const account = await mongo.findOne('salesforce', 'accounts', { Id: doc.AccountId });
@@ -78,13 +79,15 @@ const formatWonLostOpportunity = async (docs, isInsert, user, allIntegrations) =
       ...model.source(doc.Id, allIntegrations[0].integrationTeam, doc.OwnerId, doc.Id),
       ...model.description(doc.Name, doc.Description, `deal-${status}`),
       ...model.finalClient((account && account.Name) || null),
-      ...model.parametres(doc.Amount, user.default_currency, doc.Id, status),
+      ...model.parametres((allIntegrations[0].integrationTeam === '00D1t000000G6dtEAC' && doc.Montant_du_demenagement__c)
+        ? doc.Montant_du_demenagement__c : doc.Amount, user.default_currency, doc.Id, status),
       ...model.timestamp(timestampDate, timestampDate, null, timestampDate, timestampDate),
       ...model.notify_users(isInsert),
     };
   }));
 };
 
+// to be changed (amount)
 const formatOpenedOpportunity = async (docs, isInsert, user, allIntegrations) => {
   return Promise.all(docs.map(async (doc) => {
     const account = await mongo.findOne('salesforce', 'accounts', { Id: doc.AccountId });
@@ -97,7 +100,8 @@ const formatOpenedOpportunity = async (docs, isInsert, user, allIntegrations) =>
       ...model.source(doc.Id, allIntegrations[0].integrationTeam, doc.OwnerId, doc.Id),
       ...model.description(doc.Name, doc.Description, 'deal-opened'),
       ...model.finalClient((account && account.Name) || null),
-      ...model.parametres(doc.Amount, user.default_currency, doc.Id, status),
+      ...model.parametres((allIntegrations[0].integrationTeam === '00D1t000000G6dtEAC' && doc.Montant_du_demenagement__c)
+        ? doc.Montant_du_demenagement__c : doc.Amount, user.default_currency, doc.Id, status),
       ...model.timestamp(timestampDate, timestampDate, null, timestampDate, timestampExpectedDate),
       ...model.notify_users(isInsert),
     };
@@ -181,12 +185,14 @@ exports.echoesInfo = async ({ arrayInsert, arrayUpdate, arrayDelete }, dataType,
   return null;
 };
 
-exports.formatQuery = (query, date, restrictions) => {
+exports.formatQuery = (query, date, restrictions, addFields) => {
   let queryToFormat = query;
   for (const restriction of restrictions) {
     queryToFormat = queryToFormat.replace(`,${restriction}`, '');
   }
-  console.log(`${queryToFormat}${date}`);
+  for (const addField of addFields) {
+    queryToFormat = queryToFormat.replace('q=SELECT+', `q=SELECT+${addField},`);
+  }
   return `${queryToFormat}${date}`;
 };
 

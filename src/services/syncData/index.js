@@ -14,7 +14,7 @@ const syncByType = async (integrationInfo, dataType, user, allIntegrations, spec
       if (!hasMore) {
         results = await api.getData(
           integrationInfo.instanceUrl, integrationInfo.token, special || dataType,
-          lastModifiedDateTZ, pathQuery, integrationInfo.restrictions
+          lastModifiedDateTZ, pathQuery, integrationInfo.restrictions, dataType === 'opportunity' && integrationInfo.addFields
         );
       } else {
         results = await api.getMoreData(integrationInfo.instanceUrl, integrationInfo.token, urlPath);
