@@ -66,6 +66,16 @@ const formatWonLostDate = (close, lastModified) => {
   }
 };
 
+const manageSpecificAmount = (integrationTeam, doc) => {
+  if (integrationTeam === process.env.dfTeamId) {
+    return doc.Montant_du_demenagement__c || doc.Amount;
+  }
+  if (integrationTeam === process.env.dfTeamId) {
+    return doc.MRR__c || doc.Amount;
+  }
+  return doc.Amount;
+};
+
 // to be changed (amount)
 const formatWonLostOpportunity = async (docs, isInsert, user, allIntegrations) => {
   return Promise.all(docs.map(async (doc) => {
@@ -79,8 +89,7 @@ const formatWonLostOpportunity = async (docs, isInsert, user, allIntegrations) =
       ...model.source(doc.Id, allIntegrations[0].integrationTeam, doc.OwnerId, doc.Id),
       ...model.description(doc.Name, doc.Description, `deal-${status}`),
       ...model.finalClient((account && account.Name) || null),
-      ...model.parametres((allIntegrations[0].integrationTeam === '00D1t000000G6dtEAC' && doc.Montant_du_demenagement__c)
-        ? doc.Montant_du_demenagement__c : doc.Amount, user.default_currency, doc.Id, status),
+      ...model.parametres(manageSpecificAmount(allIntegrations[0].integrationTeam, doc), user.default_currency, doc.Id, status),
       ...model.timestamp(timestampDate, timestampDate, null, timestampDate, timestampDate),
       ...model.notify_users(isInsert),
     };
@@ -100,8 +109,7 @@ const formatOpenedOpportunity = async (docs, isInsert, user, allIntegrations) =>
       ...model.source(doc.Id, allIntegrations[0].integrationTeam, doc.OwnerId, doc.Id),
       ...model.description(doc.Name, doc.Description, 'deal-opened'),
       ...model.finalClient((account && account.Name) || null),
-      ...model.parametres((allIntegrations[0].integrationTeam === '00D1t000000G6dtEAC' && doc.Montant_du_demenagement__c)
-        ? doc.Montant_du_demenagement__c : doc.Amount, user.default_currency, doc.Id, status),
+      ...model.parametres(manageSpecificAmount(allIntegrations[0].integrationTeam, doc), user.default_currency, doc.Id, status),
       ...model.timestamp(timestampDate, timestampDate, null, timestampDate, timestampExpectedDate),
       ...model.notify_users(isInsert),
     };
