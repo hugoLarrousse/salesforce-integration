@@ -70,6 +70,11 @@ const manageSpecificAmount = (integrationTeam, doc) => {
   if (integrationTeam === process.env.dfTeamId) {
     return doc.Montant_du_demenagement__c || doc.Amount;
   } else if (integrationTeam === process.env.sdbTeamId) {
+    console.log('------------');
+    console.log('doc.Id :', doc.Id);
+    console.log('doc.Amount :', doc.Amount);
+    console.log('doc.MRR__c :', doc.MRR__c);
+    console.log('------------');
     return doc.MRR__c || doc.Amount;
   }
   return doc.Amount;
