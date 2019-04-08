@@ -11,6 +11,7 @@ router.post('/', async (req, res) => {
   const { integrationInfo, user, allIntegrations } = req.body;
   try {
     check.integrationInfo(integrationInfo);
+    console.log('integrationInfo :', integrationInfo);
     if (user && allIntegrations.length > 0) {
       res.status(200).send('ok');
       await syncData.everything(integrationInfo, user, allIntegrations);
