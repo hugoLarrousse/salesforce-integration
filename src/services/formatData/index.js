@@ -69,8 +69,7 @@ const formatWonLostDate = (close, lastModified) => {
 const manageSpecificAmount = (integrationTeam, doc) => {
   if (integrationTeam === process.env.dfTeamId) {
     return doc.Montant_du_demenagement__c || doc.Amount;
-  }
-  if (integrationTeam === process.env.dfTeamId) {
+  } else if (integrationTeam === process.env.sdbTeamId) {
     return doc.MRR__c || doc.Amount;
   }
   return doc.Amount;
