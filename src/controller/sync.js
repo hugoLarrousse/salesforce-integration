@@ -20,7 +20,7 @@ router.post('/', async (req, res) => {
       res.status(400).send('ERROR USER OR ALL INTEGRATIONS');
     }
   } catch (e) {
-    console.log('e.message :', e.message);
+    console.log('e.message1 :', e.message);
   }
 });
 
