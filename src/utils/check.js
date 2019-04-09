@@ -13,6 +13,8 @@ const schemaIntegrationInfo = Joi.object().keys({
   refreshToken: Joi.string().required(),
   tokenExpiresAt: Joi.any().required(),
   instanceUrl: Joi.string().required(),
+  restrictions: Joi.any().optional(),
+  addFields: Joi.any().optional(),
   createdAt: Joi.any().optional(),
   updatedAt: Joi.any().optional(),
 });
