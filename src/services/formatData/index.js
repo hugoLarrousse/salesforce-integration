@@ -67,9 +67,7 @@ const formatWonLostDate = (close, lastModified) => {
 };
 
 const manageSpecificAmount = (integrationTeam, doc) => {
-  if (integrationTeam === process.env.dfTeamId) {
-    return doc.Montant_du_demenagement__c || doc.Amount;
-  } else if (integrationTeam === process.env.sdbTeamId) {
+  if (integrationTeam === process.env.sdbTeamId) {
     if (doc.IsWon === true) {
       console.log('------------');
       console.log('doc.Id :', doc.Id);
