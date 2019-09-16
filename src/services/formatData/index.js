@@ -81,9 +81,7 @@ const manageSpecificAmount = (integrationTeam, doc) => {
 };
 
 const manageSpecificOwner = (integrationTeam, doc) => {
-  console.log('IN');
   if (integrationTeam === process.env.jbTeamId) {
-    console.log('it\'s specific', doc.CreatedById || doc);
     return doc.CreatedById || doc.OwnerId;
   }
   return doc.OwnerId;
