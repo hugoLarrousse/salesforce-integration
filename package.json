@@ -1,6 +1,6 @@
 {
   "name": "salesforceintegration",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "SalesForce API integration",
   "main": "server.js",
   "dependencies": {
@@ -56,7 +56,7 @@
     "type": "git",
     "url": "git+https://github.com/hugoLarrousse/salesforceIntegration.git"
   },
-  "author": "hugoLarrousse",
+  "author": "hugo.larrousse@heptaward.com",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/hugoLarrousse/salesforceIntegration/issues"

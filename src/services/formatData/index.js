@@ -80,6 +80,13 @@ const manageSpecificAmount = (integrationTeam, doc) => {
   return doc.Amount;
 };
 
+const manageSpecificOwner = (integrationTeam, doc) => {
+  if (integrationTeam === process.env.jbTeamId) {
+    return doc.CreatedById || doc.OwnerId;
+  }
+  return doc.OwnerId;
+};
+
 // to be changed (amount)
 const formatWonLostOpportunity = async (docs, isInsert, user, allIntegrations) => {
   return Promise.all(docs.map(async (doc) => {
@@ -110,7 +117,7 @@ const formatOpenedOpportunity = async (docs, isInsert, user, allIntegrations) =>
     return {
       ...model.h7Info(doc.OwnerId, allIntegrations, user.team_id),
       ...model.type('deal-opened'),
-      ...model.source(doc.Id, allIntegrations[0].integrationTeam, doc.OwnerId, doc.Id),
+      ...model.source(doc.Id, allIntegrations[0].integrationTeam, manageSpecificOwner(allIntegrations[0].integrationTeam, doc.Id)),
       ...model.description(doc.Name, doc.Description, 'deal-opened'),
       ...model.finalClient((account && account.Name) || null),
       ...model.parametres(manageSpecificAmount(allIntegrations[0].integrationTeam, doc), user.default_currency, doc.Id, status),
