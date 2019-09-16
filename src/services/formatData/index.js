@@ -81,6 +81,7 @@ const manageSpecificAmount = (integrationTeam, doc) => {
 };
 
 const manageSpecificOwner = (integrationTeam, doc) => {
+  console.log('IN');
   if (integrationTeam === process.env.jbTeamId) {
     console.log('it\'s specific', doc.CreatedById || doc);
     return doc.CreatedById || doc.OwnerId;
@@ -118,7 +119,7 @@ const formatOpenedOpportunity = async (docs, isInsert, user, allIntegrations) =>
     return {
       ...model.h7Info(doc.OwnerId, allIntegrations, user.team_id),
       ...model.type('deal-opened'),
-      ...model.source(doc.Id, allIntegrations[0].integrationTeam, manageSpecificOwner(allIntegrations[0].integrationTeam, doc.Id)),
+      ...model.source(doc.Id, allIntegrations[0].integrationTeam, manageSpecificOwner(allIntegrations[0].integrationTeam, doc)),
       ...model.description(doc.Name, doc.Description, 'deal-opened'),
       ...model.finalClient((account && account.Name) || null),
       ...model.parametres(manageSpecificAmount(allIntegrations[0].integrationTeam, doc), user.default_currency, doc.Id, status),
