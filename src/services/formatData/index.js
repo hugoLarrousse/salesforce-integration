@@ -116,7 +116,7 @@ const formatOpenedOpportunity = async (docs, isInsert, user, allIntegrations) =>
     const timestampDate = new Date(doc.CreatedDate).getTime();
     const timestampExpectedDate = new Date(doc.CloseDate).getTime();
     return {
-      ...model.h7Info(doc.OwnerId, allIntegrations, user.team_id),
+      ...model.h7Info(manageSpecificOwner(allIntegrations[0].integrationTeam, doc), allIntegrations, user.team_id),
       ...model.type('deal-opened'),
       ...model.source(doc.Id, allIntegrations[0].integrationTeam, manageSpecificOwner(allIntegrations[0].integrationTeam, doc), doc.Id),
       ...model.description(doc.Name, doc.Description, 'deal-opened'),
