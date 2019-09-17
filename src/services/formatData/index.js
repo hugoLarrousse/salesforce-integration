@@ -82,7 +82,6 @@ const manageSpecificAmount = (integrationTeam, doc) => {
 
 const manageSpecificOwner = (integrationTeam, doc) => {
   if (integrationTeam === process.env.jbTeamId) {
-    console.log('inside', doc.CreatedById);
     return doc.CreatedById || doc.OwnerId;
   }
   return doc.OwnerId;
@@ -96,9 +95,9 @@ const formatWonLostOpportunity = async (docs, isInsert, user, allIntegrations) =
     // const timestampDate = new Date(doc.LastModifiedDate).getTime();
     const timestampDate = formatWonLostDate(doc.CloseDate, doc.LastModifiedDate);
     return {
-      ...model.h7Info(doc.OwnerId, allIntegrations, user.team_id),
+      ...model.h7Info(manageSpecificOwner(allIntegrations[0].integrationTeam, doc), allIntegrations, user.team_id),
       ...model.type(`deal-${status}`),
-      ...model.source(doc.Id, allIntegrations[0].integrationTeam, doc.OwnerId, doc.Id),
+      ...model.source(doc.Id, allIntegrations[0].integrationTeam, manageSpecificOwner(allIntegrations[0].integrationTeam, doc), doc.Id),
       ...model.description(doc.Name, doc.Description, `deal-${status}`),
       ...model.finalClient((account && account.Name) || null),
       ...model.parametres(manageSpecificAmount(allIntegrations[0].integrationTeam, doc), user.default_currency, doc.Id, status),
