@@ -47,6 +47,8 @@ const syncByType = async (integrationInfo, dataType, user, allIntegrations, spec
 };
 
 exports.everything = async (integrationInfo, user, allIntegrations) => {
+  console.log('INN123');
+  
   await syncByType(integrationInfo, 'account');
   console.log('opportunity!! :');
   await syncByType(integrationInfo, 'opportunity', user, allIntegrations);
