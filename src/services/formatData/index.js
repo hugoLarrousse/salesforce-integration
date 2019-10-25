@@ -77,6 +77,9 @@ const manageSpecificAmount = (integrationTeam, doc) => {
     }
     return doc.MRR__c || doc.Amount || 0;
   }
+  if (integrationTeam === process.env.jbTeamId) {
+    return doc.Montant_net__c || doc.Amount || 0;
+  }
   return doc.Amount;
 };
 
