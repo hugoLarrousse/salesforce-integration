@@ -68,13 +68,13 @@ const formatWonLostDate = (close, lastModified) => {
 
 const manageSpecificAmount = (integrationTeam, doc) => {
   if (integrationTeam === process.env.sdbTeamId) {
-    if (doc.IsWon === true) {
-      console.log('------------');
-      console.log('doc.Id :', doc.Id);
-      console.log('doc.Amount :', doc.Amount);
-      console.log('doc.MRR__c :', doc.MRR__c);
-      console.log('------------');
-    }
+    // if (doc.IsWon === true) {
+    //   console.log('------------');
+    //   console.log('doc.Id :', doc.Id);
+    //   console.log('doc.Amount :', doc.Amount);
+    //   console.log('doc.MRR__c :', doc.MRR__c);
+    //   console.log('------------');
+    // }
     return doc.MRR__c || doc.Amount || 0;
   }
   if (integrationTeam === process.env.jbTeamId) {

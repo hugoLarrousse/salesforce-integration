@@ -1,9 +1,9 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 
-// setTimeout(() => {
-//   require('./src/services/cron').cron(); // eslint-disable-line
-// }, 5000);
+setTimeout(() => {
+  require('./src/services/cron').cron(); // eslint-disable-line
+}, 10000);
 
 
 require('dotenv').load({ path: '.env' });
