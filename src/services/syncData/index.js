@@ -48,7 +48,9 @@ const syncByType = async (integrationInfo, dataType, user, allIntegrations, spec
 
 exports.everything = async (integrationInfo, user, allIntegrations) => {
   await syncByType(integrationInfo, 'account');
-  await Promise.all(['opportunity', 'task', 'event'].map(type => syncByType(integrationInfo, type, user, allIntegrations)));
+  await syncByType(integrationInfo, 'opportunity', user, allIntegrations);
+  // await syncByType(integrationInfo, 'task', user, allIntegrations);
+  // await syncByType(integrationInfo, 'event', user, allIntegrations);
   heptawardApi.integration({ integration: { _id: integrationInfo._id, tokenExpiresAt: Date.now() + 7200000 } });
 };
 
