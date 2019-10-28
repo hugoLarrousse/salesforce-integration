@@ -66,7 +66,7 @@ const formatWonLostDate = (close, lastModified) => {
   }
 };
 
-const manageSpecificAmount = (integrationTeam, doc) => {
+const manageSpecificAmount = (integrationTeam, doc, addFields) => {
   if (integrationTeam === process.env.sdbTeamId) {
     // if (doc.IsWon === true) {
     //   console.log('------------');
@@ -80,6 +80,10 @@ const manageSpecificAmount = (integrationTeam, doc) => {
   if (integrationTeam === process.env.jbTeamId) {
     return doc.Montant_net__c || doc.Amount || 0;
   }
+
+  if (addFields && addFields[0] && doc[addFields[0]]) {
+    return Number(doc[addFields[0]]) || doc.Amount;
+  }
   return doc.Amount;
 };
 
@@ -91,7 +95,7 @@ const manageSpecificOwner = (integrationTeam, doc) => {
 };
 
 // to be changed (amount)
-const formatWonLostOpportunity = async (docs, isInsert, user, allIntegrations) => {
+const formatWonLostOpportunity = async (docs, isInsert, user, allIntegrations, addFields) => {
   return Promise.all(docs.map(async (doc) => {
     const account = await mongo.findOne('salesforce', 'accounts', { Id: doc.AccountId });
     const status = doc.IsWon ? 'won' : 'lost';
@@ -103,7 +107,7 @@ const formatWonLostOpportunity = async (docs, isInsert, user, allIntegrations) =
       ...model.source(doc.Id, allIntegrations[0].integrationTeam, manageSpecificOwner(allIntegrations[0].integrationTeam, doc), doc.Id),
       ...model.description(doc.Name, doc.Description, `deal-${status}`),
       ...model.finalClient((account && account.Name) || null),
-      ...model.parametres(manageSpecificAmount(allIntegrations[0].integrationTeam, doc), user.default_currency, doc.Id, status),
+      ...model.parametres(manageSpecificAmount(allIntegrations[0].integrationTeam, doc, addFields), user.default_currency, doc.Id, status),
       ...model.timestamp(timestampDate, timestampDate, null, timestampDate, timestampDate),
       ...model.notify_users(isInsert),
     };
@@ -111,7 +115,7 @@ const formatWonLostOpportunity = async (docs, isInsert, user, allIntegrations) =
 };
 
 // to be changed (amount)
-const formatOpenedOpportunity = async (docs, isInsert, user, allIntegrations) => {
+const formatOpenedOpportunity = async (docs, isInsert, user, allIntegrations, addFields) => {
   return Promise.all(docs.map(async (doc) => {
     const account = await mongo.findOne('salesforce', 'accounts', { Id: doc.AccountId });
     const status = doc.IsClosed ? (doc.IsWon && 'won') || 'lost' : 'opened';
@@ -123,7 +127,7 @@ const formatOpenedOpportunity = async (docs, isInsert, user, allIntegrations) =>
       ...model.source(doc.Id, allIntegrations[0].integrationTeam, manageSpecificOwner(allIntegrations[0].integrationTeam, doc), doc.Id),
       ...model.description(doc.Name, doc.Description, 'deal-opened'),
       ...model.finalClient((account && account.Name) || null),
-      ...model.parametres(manageSpecificAmount(allIntegrations[0].integrationTeam, doc), user.default_currency, doc.Id, status),
+      ...model.parametres(manageSpecificAmount(allIntegrations[0].integrationTeam, doc, addFields), user.default_currency, doc.Id, status),
       ...model.timestamp(timestampDate, timestampDate, null, timestampDate, timestampExpectedDate),
       ...model.notify_users(isInsert),
     };
@@ -183,12 +187,13 @@ const formatForDeletion = (docs, dataType) => {
   });
 };
 
-exports.echoesInfo = async ({ arrayInsert, arrayUpdate, arrayDelete }, dataType, user, allIntegrations) => {
+exports.echoesInfo = async ({ arrayInsert, arrayUpdate, arrayDelete }, dataType, user, allIntegrations, addFields) => {
   if (dataType === 'opportunity') {
     return {
-      toInsert: await formatOpenedOpportunity(arrayInsert, true, user, allIntegrations),
-      toUpdate: await formatOpenedOpportunity(arrayUpdate, false, user, allIntegrations),
-      toUpsert: await formatWonLostOpportunity([...arrayInsert, ...arrayUpdate].filter(data => data.IsClosed), false, user, allIntegrations),
+      toInsert: await formatOpenedOpportunity(arrayInsert, true, user, allIntegrations, addFields),
+      toUpdate: await formatOpenedOpportunity(arrayUpdate, false, user, allIntegrations, addFields),
+      toUpsert: await formatWonLostOpportunity([...arrayInsert, ...arrayUpdate]
+        .filter(data => data.IsClosed), false, user, allIntegrations, addFields),
       toDelete: formatForDeletion(arrayDelete, dataType),
     };
   } else if (dataType === 'task') {
