@@ -20,7 +20,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use('/', controller);
 
 app.all('*', (req, res) => {
-  res.status(200).json('Wrong way my friend');
+  res.status(500).json('Wrong way my friend');
 });
 
 app.listen(port, () => {
