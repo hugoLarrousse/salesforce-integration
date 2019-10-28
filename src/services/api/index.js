@@ -59,6 +59,13 @@ exports.getMoreData = (baseUrl, accessToken, pathUrl) => {
   return request.salesforce(baseUrl, pathUrl, null, 'GET', { Authorization: `Bearer ${accessToken}` }, null, true);
 };
 
+exports.getOneOpportunity = (baseUrl, accessToken, opportunityId) => {
+  return request.salesforce(
+    baseUrl, `/services/data/v43.0/sobjects/Opportunity/${opportunityId}`,
+    null, 'GET', { Authorization: `Bearer ${accessToken}` }
+  );
+};
+
 exports.getApexClass = (baseUrl, accessToken) => {
   return request.salesforce(baseUrl, PATH_FOR_QUERY, query.apexClass, 'GET', { Authorization: `Bearer ${accessToken}` }, null, true);
 };
