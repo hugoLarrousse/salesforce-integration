@@ -3,7 +3,7 @@ const bodyParser = require('body-parser');
 
 setTimeout(() => {
   require('./src/services/cron').cron(); // eslint-disable-line
-}, 10000);
+}, 8000);
 
 
 require('dotenv').load({ path: '.env' });
