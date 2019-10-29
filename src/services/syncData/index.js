@@ -22,8 +22,7 @@ const syncByType = async (integrationInfo, dataType, user, allIntegrations, spec
 
       if (results && results.records && results.records.length > 0) {
         urlPath = results.nextRecordsUrl;
-        console.log('results.records[0] :', results.records[0]);
-        console.log('results.records.length :', results.records.length);
+        console.log('results.records[0] :', results.records[0].lastModifiedDate);
         const dataForEchoes = await saveData(dataType, results.records.map(record => {
           return {
             ...record,
