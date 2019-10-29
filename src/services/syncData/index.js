@@ -22,6 +22,8 @@ const syncByType = async (integrationInfo, dataType, user, allIntegrations, spec
 
       if (results && results.records && results.records.length > 0) {
         urlPath = results.nextRecordsUrl;
+        console.log('results.records[0] :', results.records[0]);
+        console.log('results.records.length :', results.records.length);
         const dataForEchoes = await saveData(dataType, results.records.map(record => {
           return {
             ...record,
@@ -31,7 +33,6 @@ const syncByType = async (integrationInfo, dataType, user, allIntegrations, spec
         if (dataTypeForEchoes.includes(dataType)) {
           const formattedData = await formatData.echoesInfo(dataForEchoes, dataType, user, allIntegrations, dataType === 'opportunity'
             && integrationInfo.addFields);
-            console.log('formattedData.toUpdate.length :', formattedData.toUpdate[0]);
 
           if (formattedData.toInsert.length > 0
             || formattedData.toUpdate.length > 0
