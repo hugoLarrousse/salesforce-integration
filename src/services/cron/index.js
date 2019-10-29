@@ -28,8 +28,8 @@ const refreshToken = async (integrationInfo) => {
 
 const cronTask = async () => {
   try {
-    const duration = new Date();
-    console.log('start cron Task', duration);
+    const duration = Date.now();
+    console.log('start cron Task', new Date(duration));
     const allInfoForCron = await heptawardApi.integrations();
     if (!allInfoForCron || !allInfoForCron.integrations || !allInfoForCron.others) {
       throw new Error('No integrations');
@@ -64,9 +64,9 @@ const cronTask = async () => {
         logger.error(__filename, 'for cronTask', e.message);
         continue; // eslint-disable-line
       }
-      console.log('end cron Task', new Date());
-      console.log('duration :', new Date() - duration);
     }
+    console.log('end cron Task', new Date());
+    console.log('duration :', Date.now() - duration);
   } catch (e) {
     logger.error(__filename, 'cronTask', e.message);
   }
