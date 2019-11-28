@@ -21,7 +21,7 @@ const refreshToken = async (integrationInfo) => {
     }
     throw new Error('Error refresh Token');
   } catch (e) {
-    throw new Error(`${__filename}, refreshtoken, ${e.message}`);
+    throw new Error(`${__filename}, refreshToken, ${e.message}, integrationId: ${integrationInfo._id}`);
   }
 };
 
