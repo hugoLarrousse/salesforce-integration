@@ -174,6 +174,7 @@ const typeForDeletion = {
 const formatForDeletion = (docs, dataType) => {
   return docs.map((doc) => {
     return {
+      teamId: doc.teamId,
       id: doc.Id,
       type: typeForDeletion[dataType],
     };
