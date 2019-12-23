@@ -24,8 +24,8 @@ router.post('/', async (req, res) => {
       throw Error('no opportunity found');
     }
   } catch (e) {
-    logger.error(__filename, 'get /opportunityFields', `email: ${req.body.integrationInfo && req.body.integrationInfo.email}, ${e.message}`);
-    res.status(400).send({ error: 'error get opportunityField' });
+    logger.error(__filename, 'post /opportunityFields', `email: ${req.body.integrationInfo && req.body.integrationInfo.email}, ${e.message}`);
+    res.status(400).send({ error: 'error post /opportunityFields' });
   }
 });
 
