@@ -117,12 +117,13 @@ const formatOpenedOpportunity = async (docs, isInsert, user, allIntegrations, ad
     return {
       ...model.h7Info(manageSpecificOwner(allIntegrations[0].integrationTeam, doc), allIntegrations, user.team_id),
       ...model.type('deal-opened'),
-      ...model.source(doc.Id, allIntegrations[0].integrationTeam, manageSpecificOwner(allIntegrations[0].integrationTeam, doc), doc.Id),
+      ...model.source(doc.Id, allIntegrations[0].integrationTeam, manageSpecificOwner(allIntegrations[0].integrationTeam, doc), doc.Id, doc),
       ...model.description(doc.Name, doc.Description, 'deal-opened'),
       ...model.finalClient((account && account.Name) || null),
       ...model.parametres(manageSpecificAmount(allIntegrations[0].integrationTeam, doc, addFields), user.default_currency, doc.Id, status),
       ...model.timestamp(timestampDate, timestampDate, null, timestampDate, timestampExpectedDate),
       ...model.notify_users(isInsert),
+      ...model.otherUsers(doc, allIntegrations),
     };
   }));
 };

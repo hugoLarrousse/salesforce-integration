@@ -8,7 +8,7 @@ const icon = {
 
 
 exports.h7Info = (integrationId, allIntegrations, teamH7Id) => {
-  const [integration] = allIntegrations.filter(integr => integrationId === integr.integrationId);
+  const [integration] = allIntegrations.filter(i => integrationId === i.integrationId);
   return {
     orga_h7_id: (integration && integration.orgaId) || null,
     team_h7_id: teamH7Id,
@@ -74,5 +74,15 @@ exports.timestamp = (dateAdd, dateDone, dateEnd, dateMarkedDone, dateExpected) =
 
 exports.notify_users = (isInsert) => {
   return isInsert ? { notify_users: [] } : {};
+};
+
+exports.otherUsers = ({ OwnerId, CreatedById, LastModifiedById }, allIntegrations) => {
+  if (!OwnerId && !CreatedById && !LastModifiedById) return null;
+  const salesforceIds = [...new Set([OwnerId, CreatedById, LastModifiedById])];
+  const h7Ids = salesforceIds.map(id => {
+    const integration = allIntegrations.find(a => a.integrationId === id);
+    return integration && String(integration.userId);
+  });
+  return { otherUserIds: h7Ids.filter(id => id) };
 };
 
