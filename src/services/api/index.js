@@ -41,12 +41,6 @@ exports.getAllUsers = (baseUrl, accessToken, dataType, removeUserId) => {
 
 exports.getData = (baseUrl, accessToken, dataType, lastModifiedDateTZ, pathQuery, restrictions, addFields) => {
   const date = lastModifiedDateTZ || '';
-  if (dataType === 'event') {
-    console.log('baseUrl :', baseUrl);
-    console.log('pathQuery || PATH_FOR_QUERY :', pathQuery || PATH_FOR_QUERY);
-    console.log('r :', (restrictions || addFields) ? formatData.formatQuery(query[dataType], date, restrictions || [], addFields || []) : `${query[dataType]}${date}`);
-    console.log('accessToken :', accessToken);
-  }
   return request.salesforce(
     baseUrl, pathQuery || PATH_FOR_QUERY,
     (restrictions || addFields) ? formatData.formatQuery(query[dataType], date, restrictions || [], addFields || []) : `${query[dataType]}${date}`,
