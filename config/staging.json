@@ -1,0 +1,4 @@
+{
+  "h7Url": "http://localhost:3333",
+  "triggerName": ["h7OpportunityTrigger", "h7EventTrigger", "h7TaskTrigger", "h7AccountTrigger", "h7UserTrigger"]
+}
