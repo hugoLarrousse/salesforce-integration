@@ -1,17 +1,20 @@
 const requestRetry = require('requestretry');
 const config = require('config');
+const logger = require('../../utils/logger');
 
 const MAX_ATTEMPTS = config.get('requestRetry.maxAttempts');
 const RETRY_DELAY = config.get('requestRetry.retryDelay');
 
 
-const checkBody = (body) => {
+const checkBody = (body, options) => {
   if (!body) {
-    throw new Error('body empty');
+    logger.error(__filename, 'checkBody', `error no body : url${options.url}, headers ${options.headers}`);
   } else if (body.error) {
-    throw new Error(`${body.error} : ${body.error_description || ''}`);
+    logger.error(__filename, 'checkBody', `error no body : url${options.url}, headers ${options.headers},
+    body error: ${body.error} : description: ${body.error_description || ''}`);
   } else if (body[0] && body[0].errorCode) {
-    throw new Error(body[0].errorCode);
+    logger.error(__filename, 'checkBody', `error no body : url${options.url}, headers ${options.headers},
+    body errorCode: ${body[0].errorCode}`);
   }
 };
 
@@ -50,7 +53,7 @@ const salesforce = async (baseUrl, path, query, method, headers, data, retry) =>
     return null;
   }
   if (body) {
-    checkBody(body);
+    checkBody(body, options);
     return body;
   }
   return null;
