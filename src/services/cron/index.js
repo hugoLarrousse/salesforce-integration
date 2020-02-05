@@ -36,10 +36,12 @@ const cronTask = async () => {
       throw new Error('No integrations');
     }
     const testMinuteStartHour = [0, 3, 6, 9].includes(new Date().getMinutes());
-    const date = new Date(Date.now() - (testMinuteStartHour ? 4 : 10 * MS_PER_MINUTE));
+    const date = new Date(Date.now() - (testMinuteStartHour ? 4 * MS_PER_MINUTE : 10 * MS_PER_MINUTE));
+    console.log('RANGE', date);
     for (const integration of allInfoForCron.integrations) {
       try {
         const { user } = integration;
+        console.log('user.email :', user.email);
         const integrationRefreshed = await refreshToken(integration);
         const otherIntegrations = allInfoForCron.others.filter(other => String(other.orgaId) === String(integrationRefreshed.orgaId));
 
