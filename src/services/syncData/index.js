@@ -31,7 +31,6 @@ const syncByType = async (integrationInfo, dataType, user, allIntegrations, spec
         if (dataTypeForEchoes.includes(dataType)) {
           const formattedData = await formatData.echoesInfo(dataForEchoes, dataType, user, allIntegrations, dataType === 'opportunity'
             && integrationInfo.addFields);
-
           if (formattedData.toInsert.length > 0
             || formattedData.toUpdate.length > 0
             || (formattedData.toUpsert && formattedData.toUpsert.length > 0)

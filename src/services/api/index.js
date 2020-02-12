@@ -91,3 +91,13 @@ exports.postRemoteProxy = (baseUrl, accessToken, data) => {
     Authorization: `Bearer ${accessToken}`,
   }, data, true);
 };
+
+exports.getReports = (baseUrl, accessToken) =>
+  request.salesforce(baseUrl, '/services/data/v43.0/analytics/reports', null, 'GET', { Authorization: `Bearer ${accessToken}` }, null, true);
+
+exports.getReport = (baseUrl, accessToken, reportId) => {
+  return request.salesforce(
+    baseUrl, `/services/data/v43.0/analytics/reports/${reportId}`,
+    null, 'GET', { Authorization: `Bearer ${accessToken}` }, null, true,
+  );
+};
