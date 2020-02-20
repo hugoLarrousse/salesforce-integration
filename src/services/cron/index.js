@@ -50,10 +50,12 @@ const cronTask = async () => {
           'accountCron', `${date.toISOString().split('.')[0]}Z`, '/services/data/v43.0/queryAll/'
         );
 
-        await syncData.syncByType(
-          integrationRefreshed, 'opportunity', user, otherIntegrations,
-          'opportunityCron', `${date.toISOString().split('.')[0]}Z`, '/services/data/v43.0/queryAll/'
-        );
+        if (user.email !== 'clemence.canovas@ca-languedoc.fr') { // TO DO removed
+          await syncData.syncByType(
+            integrationRefreshed, 'opportunity', user, otherIntegrations,
+            'opportunityCron', `${date.toISOString().split('.')[0]}Z`, '/services/data/v43.0/queryAll/'
+          );
+        }
 
         await syncData.syncByType(
           integrationRefreshed, 'task', user, otherIntegrations,
