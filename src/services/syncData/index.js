@@ -46,11 +46,11 @@ const syncByType = async (integrationInfo, dataType, user, allIntegrations, spec
   }
 };
 
-exports.everything = async (integrationInfo, user, allIntegrations) => {
-  await syncByType(integrationInfo, 'account');
-  await syncByType(integrationInfo, 'opportunity', user, allIntegrations);
-  await syncByType(integrationInfo, 'task', user, allIntegrations);
-  await syncByType(integrationInfo, 'event', user, allIntegrations);
+exports.everything = async (integrationInfo, user, allIntegrations, dateTZ, isAuto) => {
+  await syncByType(integrationInfo, 'account', undefined, undefined, `${isAuto && 'accountAuto'}`, dateTZ);
+  await syncByType(integrationInfo, 'opportunity', user, allIntegrations, `${isAuto && 'opportunityAuto'}`, dateTZ);
+  await syncByType(integrationInfo, 'task', user, allIntegrations, `${isAuto && 'taskAuto'}`, dateTZ);
+  await syncByType(integrationInfo, 'event', user, allIntegrations, `${isAuto && 'eventAuto'}`, dateTZ);
   await heptawardApi.integration({ integration: { _id: integrationInfo._id, tokenExpiresAt: Date.now() + 7200000 } });
 };
 
