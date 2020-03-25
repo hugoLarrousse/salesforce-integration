@@ -87,7 +87,7 @@ const manageSpecificOwner = (integrationTeam, doc) => {
 // to be changed (amount)
 const formatWonLostOpportunity = async (docs, isInsert, user, allIntegrations, addFields) => {
   return Promise.all(docs.map(async (doc) => {
-    const account = await mongo.findOne('salesforce', 'accounts', { Id: doc.AccountId });
+    const account = doc.AccountId && await mongo.findOne('salesforce', 'accounts', { Id: doc.AccountId });
     const status = doc.IsWon ? 'won' : 'lost';
     // const timestampDate = new Date(doc.LastModifiedDate).getTime();
     const timestampDate = formatWonLostDate(doc.CloseDate, doc.LastModifiedDate);
@@ -107,7 +107,7 @@ const formatWonLostOpportunity = async (docs, isInsert, user, allIntegrations, a
 // to be changed (amount)
 const formatOpenedOpportunity = async (docs, isInsert, user, allIntegrations, addFields) => {
   return Promise.all(docs.map(async (doc) => {
-    const account = await mongo.findOne('salesforce', 'accounts', { Id: doc.AccountId });
+    const account = doc.AccountId && await mongo.findOne('salesforce', 'accounts', { Id: doc.AccountId });
     const status = doc.IsClosed ? (doc.IsWon && 'won') || 'lost' : 'opened';
     const timestampDate = new Date(doc.CreatedDate).getTime();
     const timestampExpectedDate = new Date(doc.CloseDate).getTime();
@@ -127,7 +127,7 @@ const formatOpenedOpportunity = async (docs, isInsert, user, allIntegrations, ad
 
 const formatTask = (docs, isInsert, user, allIntegrations) => {
   return Promise.all(docs.map(async (doc) => {
-    const account = await mongo.findOne('salesforce', 'accounts', { Id: doc.AccountId });
+    const account = doc.AccountId && await mongo.findOne('salesforce', 'accounts', { Id: doc.AccountId });
     const timestampDate = new Date(doc.CreatedDate).getTime();
     return {
       ...model.h7Info(doc.OwnerId, allIntegrations, user.team_id),
@@ -144,7 +144,7 @@ const formatTask = (docs, isInsert, user, allIntegrations) => {
 
 const formatEvent = (docs, isInsert, user, allIntegrations) => {
   return Promise.all(docs.map(async (doc) => {
-    const account = await mongo.findOne('salesforce', 'accounts', { Id: doc.AccountId });
+    const account = doc.AccountId && await mongo.findOne('salesforce', 'accounts', { Id: doc.AccountId });
     return {
       ...model.h7Info(doc.OwnerId, allIntegrations, user.team_id),
       ...model.type('meeting'),
