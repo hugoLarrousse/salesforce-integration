@@ -47,6 +47,7 @@ const syncByType = async (integrationInfo, dataType, user, allIntegrations, spec
 };
 
 exports.everything = async (integrationInfo, user, allIntegrations, dateTZ, isAuto) => {
+  console.log('integrationInfo._id :', integrationInfo._id);
   await syncByType(integrationInfo, 'account', undefined, undefined, `${isAuto && 'accountAuto'}`, dateTZ);
   await syncByType(integrationInfo, 'opportunity', user, allIntegrations, `${isAuto && 'opportunityAuto'}`, dateTZ);
   await syncByType(integrationInfo, 'task', user, allIntegrations, `${isAuto && 'taskAuto'}`, dateTZ);
