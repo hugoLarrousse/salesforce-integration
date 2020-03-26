@@ -2,12 +2,13 @@ const express = require('express');
 
 const logger = require('../utils/logger');
 const api = require('../services/api');
+const middleware = require('../utils/middleware');
 
 const Report = require('../services/reports');
 
 const router = express.Router();
 
-router.post('/', async (req, res) => {
+router.post('/', middleware.refreshToken, async (req, res) => {
   try {
     const { integrationInfo, reportId } = req.body;
     if (!integrationInfo) throw Error('no integrationInfo');

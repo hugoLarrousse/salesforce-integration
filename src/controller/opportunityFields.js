@@ -4,10 +4,11 @@ const check = require('../utils/check');
 const mongo = require('../db/mongo');
 const logger = require('../utils/logger');
 const api = require('../services/api');
+const middleware = require('../utils/middleware');
 
 const router = express.Router();
 
-router.post('/', async (req, res) => {
+router.post('/', middleware.refreshToken, async (req, res) => {
   try {
     const { integrationInfo } = req.body;
     check.integrationInfo(integrationInfo);

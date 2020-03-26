@@ -1,9 +1,10 @@
 const express = require('express');
 const users = require('../services/users');
+const middleware = require('../utils/middleware');
 
 const router = express.Router();
 
-router.post('/', async (req, res) => {
+router.post('/', middleware.refreshToken, async (req, res) => {
   const { integrationInfo } = req.body;
   try {
     const coworkers = await users.getCoworkers(integrationInfo);

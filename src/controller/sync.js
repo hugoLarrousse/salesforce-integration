@@ -1,6 +1,7 @@
 const express = require('express');
 const check = require('../utils/check');
 const syncData = require('../services/syncData');
+const middleware = require('../utils/middleware');
 const logger = require('../utils/logger');
 
 const router = express.Router();
@@ -8,7 +9,7 @@ const router = express.Router();
 const ONE_DAY_MILLISECONDS = 86400000;
 const THREE_HOURS_MILLISECONDS = 3600000 * 3;
 
-router.post('/', async (req, res) => {
+router.post('/', middleware.refreshToken, async (req, res) => {
   const { integrationInfo, user, allIntegrations } = req.body;
   try {
     check.integrationInfo(integrationInfo);
@@ -27,7 +28,7 @@ router.post('/', async (req, res) => {
 });
 
 
-router.post('/auto', async (req, res) => {
+router.post('/auto', middleware.refreshToken, async (req, res) => {
   const { integrationInfo, user, allIntegrations } = req.body;
   try {
     check.integrationInfo(integrationInfo);
@@ -41,7 +42,7 @@ router.post('/auto', async (req, res) => {
       res.status(400).send('ERROR USER OR ALL INTEGRATIONS');
     }
   } catch (e) {
-    logger.error(__filename, 'post /syncAuto', `user: ${req.body.user.email}, ${e.message}`);
+    logger.error(__filename, 'post /syncAuto', `user: ${req.body.email}, ${e.message}`);
   }
 });
 
