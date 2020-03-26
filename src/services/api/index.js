@@ -40,6 +40,7 @@ exports.getAllUsers = (baseUrl, accessToken, dataType, removeUserId) => {
 };
 
 exports.getData = (baseUrl, accessToken, dataType, lastModifiedDateTZ, pathQuery, restrictions, addFields) => {
+  console.log('dataType :', dataType);
   const date = lastModifiedDateTZ || '';
   return request.salesforce(
     baseUrl, pathQuery || PATH_FOR_QUERY,
