@@ -25,7 +25,7 @@ router.post('/', async (req, res) => {
       res.status(400).send('ERROR USER OR ALL INTEGRATIONS');
     }
   } catch (e) {
-    logger.error(__filename, 'post /sync', `user: ${req.body.email}, e.message`);
+    logger.error(__filename, 'post /sync', `user: ${req.body.user.email}, ${e.message}`);
   }
 });
 
@@ -44,7 +44,7 @@ router.post('/auto', async (req, res) => {
       res.status(400).send('ERROR USER OR ALL INTEGRATIONS');
     }
   } catch (e) {
-    logger.error(__filename, 'post /syncAuto', `user: ${req.body.email}, e.message`);
+    logger.error(__filename, 'post /syncAuto', `user: ${req.body.user.email}, ${e.message}`);
   }
 });
 
