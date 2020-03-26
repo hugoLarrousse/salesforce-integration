@@ -1,14 +1,11 @@
 const express = require('express');
 
 const check = require('../utils/check');
-const middleware = require('../utils/middleware');
 const mongo = require('../db/mongo');
 const logger = require('../utils/logger');
 const api = require('../services/api');
 
 const router = express.Router();
-
-router.all('*', middleware.refreshToken);
 
 router.post('/', async (req, res) => {
   try {

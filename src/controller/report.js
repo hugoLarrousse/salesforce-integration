@@ -1,14 +1,11 @@
 const express = require('express');
 
-const middleware = require('../utils/middleware');
 const logger = require('../utils/logger');
 const api = require('../services/api');
 
 const Report = require('../services/reports');
 
 const router = express.Router();
-
-router.all('*', middleware.refreshToken);
 
 router.post('/', async (req, res) => {
   try {

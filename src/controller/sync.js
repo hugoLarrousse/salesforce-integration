@@ -1,12 +1,9 @@
 const express = require('express');
 const check = require('../utils/check');
 const syncData = require('../services/syncData');
-const middleware = require('../utils/middleware');
 const logger = require('../utils/logger');
 
 const router = express.Router();
-
-router.all('*', middleware.refreshToken);
 
 const ONE_DAY_MILLISECONDS = 86400000;
 const THREE_HOURS_MILLISECONDS = 3600000 * 3;

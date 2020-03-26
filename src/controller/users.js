@@ -1,10 +1,7 @@
 const express = require('express');
 const users = require('../services/users');
-const middleware = require('../utils/middleware');
 
 const router = express.Router();
-
-router.all('*', middleware.refreshToken);
 
 router.post('/', async (req, res) => {
   const { integrationInfo } = req.body;

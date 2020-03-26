@@ -6,7 +6,7 @@ const heptawardApi = require('../heptawardApi');
 const dataTypeForEchoes = ['opportunity', 'task', 'event'];
 
 const syncByType = async (integrationInfo, dataType, user, allIntegrations, special, lastModifiedDateTZ, pathQuery) => {
-  console.log('1', dataType);
+  console.log('1', dataType, special);
   try {
     let hasMore = false;
     let urlPath = '';
