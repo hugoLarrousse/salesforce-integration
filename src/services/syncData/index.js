@@ -47,7 +47,7 @@ const syncByType = async (integrationInfo, dataType, user, allIntegrations, spec
       console.log('6', dataType);
     } while (hasMore);
   } catch (e) {
-    throw new Error(`${__filename}, syncByType (${dataType}, user: ${user._id}), ${e.message}`);
+    throw Error(`${__filename}, syncByType (${dataType}, user: ${user && user._id}), ${e.message}`);
   }
 };
 

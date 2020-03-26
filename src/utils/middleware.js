@@ -24,6 +24,7 @@ const isTokenValid = (expirationDate) => Date.now() - 300000 < Number(expiration
 
 exports.refreshToken = async (req, res, next) => {
   const { integrationInfo } = req.body;
+  console.log('HELLO', integrationInfo);
   if (integrationInfo && isTokenValid(integrationInfo.tokenExpiresAt)) {
     next();
   } else {
