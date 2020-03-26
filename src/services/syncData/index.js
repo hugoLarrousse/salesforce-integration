@@ -6,7 +6,6 @@ const heptawardApi = require('../heptawardApi');
 const dataTypeForEchoes = ['opportunity', 'task', 'event'];
 
 const syncByType = async (integrationInfo, dataType, user, allIntegrations, special, lastModifiedDateTZ, pathQuery) => {
-  console.log('1', dataType, special);
   try {
     let hasMore = false;
     let urlPath = '';
@@ -17,11 +16,9 @@ const syncByType = async (integrationInfo, dataType, user, allIntegrations, spec
           integrationInfo.instanceUrl, integrationInfo.token, special || dataType,
           lastModifiedDateTZ, pathQuery, integrationInfo.restrictions, dataType === 'opportunity' && integrationInfo.addFields
         );
-        console.log('2', dataType);
       } else {
         results = await api.getMoreData(integrationInfo.instanceUrl, integrationInfo.token, urlPath);
       }
-      console.log('3', dataType);
       if (results && results.records && results.records.length > 0) {
         urlPath = results.nextRecordsUrl;
         const dataForEchoes = await saveData(dataType, results.records.map(record => {
@@ -30,7 +27,6 @@ const syncByType = async (integrationInfo, dataType, user, allIntegrations, spec
             teamId: integrationInfo.integrationTeam,
           };
         }));
-        console.log('4', dataType);
         if (dataTypeForEchoes.includes(dataType)) {
           const formattedData = await formatData.echoesInfo(dataForEchoes, dataType, user, allIntegrations, dataType === 'opportunity'
             && integrationInfo.addFields);
@@ -41,10 +37,8 @@ const syncByType = async (integrationInfo, dataType, user, allIntegrations, spec
             await heptawardApi.echoes(formattedData);
           }
         }
-        console.log('5', dataType);
       }
       hasMore = (results && results.done === false) || false;
-      console.log('6', dataType);
     } while (hasMore);
   } catch (e) {
     throw Error(`${__filename}, syncByType (${dataType}, user: ${user && user._id}), ${e.message}`);
@@ -52,10 +46,10 @@ const syncByType = async (integrationInfo, dataType, user, allIntegrations, spec
 };
 
 exports.everything = async (integrationInfo, user, allIntegrations, dateTZ, isAuto) => {
-  await syncByType(integrationInfo, 'account', user, undefined, `${isAuto && 'accountAuto'}`, dateTZ);
-  await syncByType(integrationInfo, 'opportunity', user, allIntegrations, `${isAuto && 'opportunityAuto'}`, dateTZ);
-  await syncByType(integrationInfo, 'task', user, allIntegrations, `${isAuto && 'taskAuto'}`, dateTZ);
-  await syncByType(integrationInfo, 'event', user, allIntegrations, `${isAuto && 'eventAuto'}`, dateTZ);
+  await syncByType(integrationInfo, 'account', user, undefined, isAuto && 'accountAuto', dateTZ);
+  await syncByType(integrationInfo, 'opportunity', user, allIntegrations, isAuto && 'opportunityAuto', dateTZ);
+  await syncByType(integrationInfo, 'task', user, allIntegrations, isAuto && 'taskAuto', dateTZ);
+  await syncByType(integrationInfo, 'event', user, allIntegrations, isAuto && 'eventAuto', dateTZ);
   await heptawardApi.integration({ integration: { _id: integrationInfo._id, tokenExpiresAt: Date.now() + 7200000 } });
 };
 
