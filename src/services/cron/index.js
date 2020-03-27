@@ -36,7 +36,7 @@ const cronTask = async () => {
       throw new Error('No integrations');
     }
     const testMinuteStartHour = [0, 3, 6, 9].includes(new Date().getMinutes());
-    const date = new Date(Date.now() - (testMinuteStartHour ? 4 * MS_PER_MINUTE : 10 * MS_PER_MINUTE));
+    const date = new Date(Date.now() - (testMinuteStartHour ? 8 * MS_PER_MINUTE : 11 * MS_PER_MINUTE));
     console.log('RANGE', date);
     for (const integration of allInfoForCron.integrations) {
       try {
