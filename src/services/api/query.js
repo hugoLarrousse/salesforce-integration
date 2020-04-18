@@ -1,9 +1,9 @@
 
 /* eslint-disable */
 module.exports = {
-  opportunity: 'q=SELECT+Id,Name,OwnerId,AccountId,Amount,CloseDate,IsClosed,CreatedById,CreatedDate,IsDeleted,Description,LastActivityDate,LastModifiedById,LastModifiedDate,StageName,Type,IsWon+from+Opportunity+WHERE+CloseDate>2017-12-31',
-  event: 'q=SELECT+Id,Subject,AccountId,IsAllDayEvent,OwnerId,IsRecurrence,CreatedById,CreatedDate,ActivityDate,IsDeleted,Description,DurationInMinutes,EndDateTime,LastModifiedById,LastModifiedDate,WhoId,WhatId,StartDateTime,ActivityDateTime,EventSubtype+from+Event+WHERE+EndDateTime>2018-12-31T23:59:59Z',
-  task: "q=SELECT+Id,Subject,AccountId,OwnerId,CallDurationInSeconds,CallType,IsClosed,Description,CreatedById,CreatedDate,IsDeleted,ActivityDate,LastModifiedById,LastModifiedDate,WhoId,WhatId,Status,TaskSubtype+from+Task+where+tasksubtype='call'+AND+ActivityDate>2018-12-31",
+  opportunity: 'q=SELECT+Id,Name,OwnerId,AccountId,Amount,CloseDate,IsClosed,CreatedById,CreatedDate,IsDeleted,Description,LastActivityDate,LastModifiedById,LastModifiedDate,StageName,Type,IsWon+from+Opportunity+WHERE+CloseDate>2019-12-31',
+  event: 'q=SELECT+Id,Subject,AccountId,IsAllDayEvent,OwnerId,IsRecurrence,CreatedById,CreatedDate,ActivityDate,IsDeleted,Description,DurationInMinutes,EndDateTime,LastModifiedById,LastModifiedDate,WhoId,WhatId,StartDateTime,ActivityDateTime,EventSubtype+from+Event+WHERE+EndDateTime>2019-12-31T23:59:59Z',
+  task: "q=SELECT+Id,Subject,AccountId,OwnerId,CallDurationInSeconds,CallType,IsClosed,Description,CreatedById,CreatedDate,IsDeleted,ActivityDate,LastModifiedById,LastModifiedDate,WhoId,WhatId,Status,TaskSubtype+from+Task+where+tasksubtype='call'+AND+ActivityDate>2019-12-31",
   account: 'q=SELECT+Id,Name,OwnerId,BillingCountry,CreatedById,CreatedDate,IsDeleted,Description,LastActivityDate,LastModifiedById,LastModifiedDate,PhotoUrl,Type+from+Account',
   users: 'q=SELECT+Email,Id,FirstName,LastName,Phone,LanguageLocaleKey,LocaleSidKey,ReceivesAdminInfoEmails,FullPhotoUrl+from+User',
 
@@ -17,6 +17,7 @@ module.exports = {
   taskAuto: "q=SELECT+Id,Subject,AccountId,OwnerId,CallDurationInSeconds,CallType,IsClosed,Description,CreatedById,CreatedDate,IsDeleted,ActivityDate,LastModifiedById,LastModifiedDate,WhoId,WhatId,Status,TaskSubtype+FROM+Task+WHERE+tasksubtype='call'+AND+LastModifiedDate>",
   accountAuto: 'q=SELECT+Id,Name,OwnerId,BillingCountry,CreatedById,CreatedDate,IsDeleted,Description,LastActivityDate,LastModifiedById,LastModifiedDate,PhotoUrl,Type+FROM+Account+WHERE+LastModifiedDate>',
 
+  // webhooks (disable)
   opportunityRecent: 'q=SELECT+Id,Name,OwnerId,AccountId,Amount,CloseDate,IsClosed,CreatedById,CreatedDate,IsDeleted,Description,LastActivityDate,LastModifiedById,LastModifiedDate,StageName,Type,IsWon+from+Opportunity+order+by+LastModifiedDate+desc+limit+10',
   eventRecent: 'q=SELECT+Id,Subject,AccountId,IsAllDayEvent,OwnerId,IsRecurrence,CreatedById,CreatedDate,ActivityDate,IsDeleted,Description,DurationInMinutes,EndDateTime,LastModifiedById,LastModifiedDate,WhoId,WhatId,StartDateTime,ActivityDateTime,EventSubtype+from+Event+order+by+LastModifiedDate+desc+limit+10',
   taskRecent: "q=SELECT+Id,Subject,AccountId,OwnerId,CallDurationInSeconds,CallType,IsClosed,Description,CreatedById,CreatedDate,IsDeleted,ActivityDate,LastModifiedById,LastModifiedDate,WhoId,WhatId,Status,TaskSubtype+from+Task+where+tasksubtype='call'+order+by+LastModifiedDate+desc+limit+10",
