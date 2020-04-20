@@ -2,7 +2,7 @@ const config = require('config');
 
 const request = require('../request');
 const query = require('./query');
-const formatData = require('../formatData');
+const makeQuery = require('../../utils/queryFactory');
 
 const grantType = config.get('grantType');
 
@@ -30,27 +30,19 @@ exports.getInfoUser = (url, accessToken) => {
 };
 
 exports.getOneUser = (baseUrl, accessToken, dataType, userId) => {
-  const fullQuery = `${query[dataType]}+where+Id='${userId}'`;
+  const fullQuery = makeQuery(query.keys[dataType], `Id='${userId}'`, 'user');
   return request.salesforce(baseUrl, PATH_FOR_QUERY, fullQuery, 'GET', { Authorization: `Bearer ${accessToken}` }, null, true);
 };
 
 exports.getAllUsers = (baseUrl, accessToken, dataType, removeUserId) => {
-  const fullQuery = removeUserId ? `${query[dataType]}+where+Id!='${removeUserId}'` : query[dataType];
+  const fullQuery = makeQuery(query.keys[dataType], removeUserId && `Id!='${removeUserId}'`, 'user');
   return request.salesforce(baseUrl, PATH_FOR_QUERY, fullQuery, 'GET', { Authorization: `Bearer ${accessToken}` }, null, true);
 };
 
-exports.getData = (baseUrl, accessToken, dataType, lastModifiedDateTZ, pathQuery, restrictions, addFields) => {
-  const date = lastModifiedDateTZ || '';
+exports.getData = (baseUrl, accessToken, dataType, lastModifiedDateTZ, pathQuery, restrictions, addFields, customFilters = []) => {
   return request.salesforce(
     baseUrl, pathQuery || PATH_FOR_QUERY,
-    (restrictions || addFields) ? formatData.formatQuery(query[dataType], date, restrictions || [], addFields || []) : `${query[dataType]}${date}`,
-    'GET', { Authorization: `Bearer ${accessToken}` }, null, true
-  );
-};
-
-exports.getCronData = (baseUrl, accessToken, dataType, lastModifiedDateTZ) => {
-  return request.salesforce(
-    baseUrl, PATH_FOR_QUERY, `${query[dataType]}${lastModifiedDateTZ}`,
+    makeQuery(query.keys[dataType], [query.filters[dataType] + (lastModifiedDateTZ || ''), ...customFilters], dataType, restrictions, addFields),
     'GET', { Authorization: `Bearer ${accessToken}` }, null, true
   );
 };

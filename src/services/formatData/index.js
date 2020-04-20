@@ -204,14 +204,3 @@ exports.echoesInfo = async ({ arrayInsert, arrayUpdate, arrayDelete }, dataType,
   return null;
 };
 
-exports.formatQuery = (query, date, restrictions, addFields) => {
-  let queryToFormat = query;
-  for (const restriction of restrictions) {
-    queryToFormat = queryToFormat.replace(`,${restriction}`, '');
-  }
-  for (const addField of addFields) {
-    queryToFormat = queryToFormat.replace('q=SELECT+', `q=SELECT+${addField},`);
-  }
-  return `${queryToFormat}${date}`;
-};
-

@@ -5,6 +5,8 @@ const heptawardApi = require('../heptawardApi');
 
 const dataTypeForEchoes = ['opportunity', 'task', 'event'];
 
+const extractCustomFilter = (customFilters, type) => (customFilters && customFilters[type]) || [];
+
 const syncByType = async (integrationInfo, dataType, user, allIntegrations, special, lastModifiedDateTZ, pathQuery) => {
   try {
     let hasMore = false;
@@ -14,7 +16,8 @@ const syncByType = async (integrationInfo, dataType, user, allIntegrations, spec
       if (!hasMore) {
         results = await api.getData(
           integrationInfo.instanceUrl, integrationInfo.token, special || dataType,
-          lastModifiedDateTZ, pathQuery, integrationInfo.restrictions, dataType === 'opportunity' && integrationInfo.addFields
+          lastModifiedDateTZ, pathQuery, integrationInfo.restrictions, dataType === 'opportunity' && integrationInfo.addFields,
+          extractCustomFilter(integrationInfo.customFilters, dataType),
         );
       } else {
         results = await api.getMoreData(integrationInfo.instanceUrl, integrationInfo.token, urlPath);
