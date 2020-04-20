@@ -31,15 +31,18 @@ exports.getInfoUser = (url, accessToken) => {
 
 exports.getOneUser = (baseUrl, accessToken, dataType, userId) => {
   const fullQuery = makeQuery(query.keys[dataType], `Id='${userId}'`, 'user');
+  console.log('fullQuery getOneUser :', fullQuery);
   return request.salesforce(baseUrl, PATH_FOR_QUERY, fullQuery, 'GET', { Authorization: `Bearer ${accessToken}` }, null, true);
 };
 
 exports.getAllUsers = (baseUrl, accessToken, dataType, removeUserId) => {
   const fullQuery = makeQuery(query.keys[dataType], removeUserId && `Id!='${removeUserId}'`, 'user');
+  console.log('fullQuery getAllUsers :', fullQuery);
   return request.salesforce(baseUrl, PATH_FOR_QUERY, fullQuery, 'GET', { Authorization: `Bearer ${accessToken}` }, null, true);
 };
 
 exports.getData = (baseUrl, accessToken, dataType, lastModifiedDateTZ, pathQuery, restrictions, addFields, customFilters = []) => {
+  console.log('makeQuery', makeQuery(query.keys[dataType], [query.filters[dataType] + (lastModifiedDateTZ || ''), ...customFilters], dataType, restrictions, addFields));
   return request.salesforce(
     baseUrl, pathQuery || PATH_FOR_QUERY,
     makeQuery(query.keys[dataType], [query.filters[dataType] + (lastModifiedDateTZ || ''), ...customFilters], dataType, restrictions, addFields),
