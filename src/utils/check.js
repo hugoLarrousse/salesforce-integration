@@ -17,6 +17,8 @@ const schemaIntegrationInfo = Joi.object().keys({
   addFields: Joi.any().optional(),
   createdAt: Joi.any().optional(),
   updatedAt: Joi.any().optional(),
+  customFilters: Joi.any().optional(),
+  stageNames: Joi.any().optional(),
 });
 
 exports.integrationInfo = info => {

@@ -53,7 +53,7 @@ exports.finalClient = (accountName) => {
 exports.parametres = (value, currency, dealId, status) => {
   return {
     parametres: {
-      valeur: value || null,
+      valeur: value || 0,
       devise: currency || null,
       deal_id: dealId || null,
       status: status || null,
@@ -86,3 +86,5 @@ exports.otherUsers = ({ OwnerId, CreatedById, LastModifiedById }, allIntegration
   return { otherUserIds: h7Ids.filter(id => id) };
 };
 
+exports.stageCelebration = (stageNames = [], stageName) => stageNames.includes(stageName) &&
+  { needStageCelebration: true, label: stageName, stageId: stageName };

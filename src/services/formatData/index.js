@@ -105,7 +105,7 @@ const formatWonLostOpportunity = async (docs, isInsert, user, allIntegrations, a
 };
 
 // to be changed (amount)
-const formatOpenedOpportunity = async (docs, isInsert, user, allIntegrations, addFields) => {
+const formatOpenedOpportunity = async (docs, isInsert, user, allIntegrations, addFields, stageNames) => {
   return Promise.all(docs.map(async (doc) => {
     const account = doc.AccountId && await mongo.findOne('salesforce', 'accounts', { Id: doc.AccountId });
     const status = doc.IsClosed ? (doc.IsWon && 'won') || 'lost' : 'opened';
@@ -121,6 +121,7 @@ const formatOpenedOpportunity = async (docs, isInsert, user, allIntegrations, ad
       ...model.timestamp(timestampDate, timestampDate, null, timestampDate, timestampExpectedDate),
       ...model.notify_users(isInsert),
       ...model.otherUsers(doc, allIntegrations),
+      ...stageNames && model.stageCelebration(stageNames, doc.StageName),
     };
   }));
 };
@@ -179,11 +180,11 @@ const formatForDeletion = (docs, dataType) => {
   });
 };
 
-exports.echoesInfo = async ({ arrayInsert, arrayUpdate, arrayDelete }, dataType, user, allIntegrations, addFields) => {
+exports.echoesInfo = async ({ arrayInsert, arrayUpdate, arrayDelete }, dataType, user, allIntegrations, addFields, stageNames) => {
   if (dataType === 'opportunity') {
     return {
-      toInsert: await formatOpenedOpportunity(arrayInsert, true, user, allIntegrations, addFields),
-      toUpdate: await formatOpenedOpportunity(arrayUpdate, false, user, allIntegrations, addFields),
+      toInsert: await formatOpenedOpportunity(arrayInsert, true, user, allIntegrations, addFields, stageNames),
+      toUpdate: await formatOpenedOpportunity(arrayUpdate, false, user, allIntegrations, addFields, stageNames),
       toUpsert: await formatWonLostOpportunity([...arrayInsert, ...arrayUpdate]
         .filter(data => data.IsClosed), false, user, allIntegrations, addFields),
       toDelete: formatForDeletion(arrayDelete, dataType),

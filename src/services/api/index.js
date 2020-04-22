@@ -42,7 +42,6 @@ exports.getAllUsers = (baseUrl, accessToken, dataType, removeUserId) => {
 };
 
 exports.getData = (baseUrl, accessToken, dataType, lastModifiedDateTZ, pathQuery, restrictions, addFields, customFilters = []) => {
-  console.log('makeQuery', makeQuery(query.keys[dataType], [query.filters[dataType] + (lastModifiedDateTZ || ''), ...customFilters], dataType, restrictions, addFields));
   return request.salesforce(
     baseUrl, pathQuery || PATH_FOR_QUERY,
     makeQuery(query.keys[dataType], [query.filters[dataType] + (lastModifiedDateTZ || ''), ...customFilters], dataType, restrictions, addFields),
