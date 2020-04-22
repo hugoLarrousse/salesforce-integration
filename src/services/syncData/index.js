@@ -23,6 +23,7 @@ const syncByType = async (integrationInfo, dataType, user, allIntegrations, spec
     let urlPath = '';
     let results = null;
     const allIntegrationsUserIds = allIntegrations.map(i => i.integrationId || 'NoUserIntegrationId');
+
     do {
       if (!hasMore) {
         results = await api.getData(

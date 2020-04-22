@@ -42,6 +42,7 @@ const cronTask = async () => {
       try {
         const { user } = integration;
         console.log('user.email :', user.email);
+
         const integrationRefreshed = await refreshToken(integration);
         const otherIntegrations = allInfoForCron.others.filter(other => String(other.orgaId) === String(integrationRefreshed.orgaId));
 

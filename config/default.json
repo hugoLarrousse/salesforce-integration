@@ -7,6 +7,7 @@
     "credentials": "authorization_code",
     "refreshToken": "refresh_token"
   },
+  "env": "default",
   "h7Url": "https://api.heptaward.com",
   "triggerName": ["h7OpportunityTrigger", "h7EventTrigger", "h7TaskTrigger", "h7AccountTrigger", "h7UserTrigger"]
 }
