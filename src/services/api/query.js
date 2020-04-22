@@ -28,9 +28,9 @@ exports.keys = {
 };
 
 exports.filters = {
-  opportunity: 'CloseDate>2019-12-31',
-  event: 'EndDateTime>2019-12-31T23:59:59Z',
-  task: "tasksubtype='call'+AND+ActivityDate>2019-12-31",
+  opportunity: 'CloseDate>2017-12-31',
+  event: 'EndDateTime>2018-12-31T23:59:59Z',
+  task: "tasksubtype='call'+AND+ActivityDate>2018-12-31",
   account: '',
   users: '',
 

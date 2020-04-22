@@ -10,10 +10,10 @@ const regexGetInvalidField = new RegExp("'(.*?)'", '');
 
 const checkBody = (body, options) => {
   if (!body) {
-    logger.error(__filename, 'checkBody', `error no body : url${options.url},
+    logger.error(__filename, 'checkBody', `error no body : url ${options.url},
       headers Authorization ${options.headers && options.headers.Authorization}`);
   } else if (body.error) {
-    logger.error(__filename, 'checkBody', `get body.error : url${options.url},
+    logger.error(__filename, 'checkBody', `get body.error : url ${options.url},
     headers Authorization ${options.headers && options.headers.Authorization},
     body error: ${body.error} : description: ${body.error_description || ''}`);
   } else if (body[0] && body[0].errorCode) {
@@ -21,7 +21,7 @@ const checkBody = (body, options) => {
     if (body[0].errorCode === 'INVALID_FIELD') {
       match = body[0].message.match(regexGetInvalidField);
     }
-    logger.error(__filename, 'checkBody', `get body errorCode : url${options.url},
+    logger.error(__filename, 'checkBody', `get body errorCode : url ${options.url},
     headers Authorization ${options.headers && options.headers.Authorization},
     body errorCode: ${body[0].errorCode}
     ${match && match[1] && `invalid field: ${match[1]}`}`);
