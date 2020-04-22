@@ -7,11 +7,22 @@ const dataTypeForEchoes = ['opportunity', 'task', 'event'];
 
 const extractCustomFilter = (customFilters, type) => (customFilters && customFilters[type]) || [];
 
+const checkRecords = (records, allIntegrationsUserIds, integrationTeam) => {
+  return records.filter(record => allIntegrationsUserIds.includes(record.OwnerId)).map(record => {
+    return {
+      ...record,
+      teamId: integrationTeam,
+    };
+  });
+};
+
+
 const syncByType = async (integrationInfo, dataType, user, allIntegrations, special, lastModifiedDateTZ, pathQuery) => {
   try {
     let hasMore = false;
     let urlPath = '';
     let results = null;
+    const allIntegrationsUserIds = allIntegrations.map(i => i.integrationId || 'NoUserIntegrationId');
     do {
       if (!hasMore) {
         results = await api.getData(
@@ -24,12 +35,8 @@ const syncByType = async (integrationInfo, dataType, user, allIntegrations, spec
       }
       if (results && results.records && results.records.length > 0) {
         urlPath = results.nextRecordsUrl;
-        const dataForEchoes = await saveData(dataType, results.records.map(record => {
-          return {
-            ...record,
-            teamId: integrationInfo.integrationTeam,
-          };
-        }));
+        const dataForEchoes = await saveData(dataType, checkRecords(results.records, allIntegrationsUserIds, integrationInfo.integrationTeam));
+
         if (dataTypeForEchoes.includes(dataType)) {
           const formattedData = await formatData.echoesInfo(dataForEchoes, dataType, user, allIntegrations, dataType === 'opportunity'
             && integrationInfo.addFields, special && special.includes('Cron') && integrationInfo.stageNames);
