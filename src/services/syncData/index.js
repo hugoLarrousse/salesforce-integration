@@ -8,6 +8,7 @@ const dataTypeForEchoes = ['opportunity', 'task', 'event'];
 const extractCustomFilter = (customFilters, type) => (customFilters && customFilters[type]) || [];
 
 const checkRecords = (records, allIntegrationsUserIds, integrationTeam) => {
+  if (!allIntegrationsUserIds) return records;
   return records.filter(record => allIntegrationsUserIds.includes(record.OwnerId)).map(record => {
     return {
       ...record,
@@ -22,7 +23,7 @@ const syncByType = async (integrationInfo, dataType, user, allIntegrations, spec
     let hasMore = false;
     let urlPath = '';
     let results = null;
-    const allIntegrationsUserIds = allIntegrations.map(i => i.integrationId || 'NoUserIntegrationId');
+    const allIntegrationsUserIds = allIntegrations && allIntegrations.map(i => i.integrationId || 'NoUserIntegrationId');
 
     do {
       if (!hasMore) {
