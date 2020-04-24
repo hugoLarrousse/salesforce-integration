@@ -2,6 +2,8 @@ const mongo = require('../../db/mongo');
 const model = require('./model');
 const logger = require('../../utils/logger');
 
+console.log(process.env.dctlbTeamId);
+
 const credentials = (infoLogin) => {
   return {
     token: infoLogin.access_token,
@@ -52,16 +54,45 @@ const isToday = (date1, date2) => {
   return (year && month && day) || false;
 };
 
-const formatWonLostDate = (close, lastModified) => {
+const hasCheckErrorCloseDate = (customField, closeDate, lastModifiedDate) => {
+  let [year, month] = customField.split('-');
+  const [closeYear, closeMonth] = closeDate.split('-');
+  month -= 1;
+  if (month === 0) {
+    month = 12;
+    year -= 1;
+  }
+
+  if (month === Number(closeMonth) && Number(year) === Number(closeYear)) return closeDate;
+  if (month < 10) month = `0${month}`;
+
+  const [lastModifiedYear, lastModifiedMonth, lastModifiedDay] = lastModifiedDate.split('T')[0].split('-');
+
+  if (lastModifiedYear === year && lastModifiedMonth === month) {
+    return `${year}-${month}-${lastModifiedDay}`;
+  }
+
+  const dayOfTheMonth = new Date().getUTCDate();
+
+  return `${year}-${month}-${dayOfTheMonth < 10 ? `0${dayOfTheMonth}` : dayOfTheMonth}`;
+};
+
+const formatWonLostDate = (close, lastModified, integrationTeam, doc) => {
   try {
-    const closeDate = new Date(close);
+    let closeDate = null;
+    if (process.env.dctlbTeamId === integrationTeam && doc.First_Billing_Month_YYYY_MM__c) {
+      closeDate = new Date(hasCheckErrorCloseDate(doc.First_Billing_Month_YYYY_MM__c, close, lastModified));
+    } else {
+      closeDate = new Date(close);
+    }
+
     const lastModifiedDate = new Date(lastModified);
     if (isToday(closeDate, lastModifiedDate)) {
       return lastModifiedDate.getTime();
     }
     return closeDate.setHours(12);
   } catch (e) {
-    logger.error(__filename, formatWonLostDate, e.message);
+    logger.error(__filename, 'formatWonLostDate', `integrationTeam: ${integrationTeam}, ${e.message}`);
     return new Date(lastModified).getTime();
   }
 };
@@ -89,15 +120,16 @@ const formatWonLostOpportunity = async (docs, isInsert, user, allIntegrations, a
   return Promise.all(docs.map(async (doc) => {
     const account = doc.AccountId && await mongo.findOne('salesforce', 'accounts', { Id: doc.AccountId });
     const status = doc.IsWon ? 'won' : 'lost';
+    const { integrationTeam } = allIntegrations[0];
     // const timestampDate = new Date(doc.LastModifiedDate).getTime();
-    const timestampDate = formatWonLostDate(doc.CloseDate, doc.LastModifiedDate);
+    const timestampDate = formatWonLostDate(doc.CloseDate, doc.LastModifiedDate, integrationTeam, doc);
     return {
-      ...model.h7Info(manageSpecificOwner(allIntegrations[0].integrationTeam, doc), allIntegrations, user.team_id),
+      ...model.h7Info(manageSpecificOwner(integrationTeam, doc), allIntegrations, user.team_id),
       ...model.type(`deal-${status}`),
-      ...model.source(doc.Id, allIntegrations[0].integrationTeam, manageSpecificOwner(allIntegrations[0].integrationTeam, doc), doc.Id),
+      ...model.source(doc.Id, integrationTeam, manageSpecificOwner(integrationTeam, doc), doc.Id),
       ...model.description(doc.Name, doc.Description, `deal-${status}`),
       ...model.finalClient((account && account.Name) || null),
-      ...model.parametres(manageSpecificAmount(allIntegrations[0].integrationTeam, doc, addFields), user.default_currency, doc.Id, status),
+      ...model.parametres(manageSpecificAmount(integrationTeam, doc, addFields), user.default_currency, doc.Id, status),
       ...model.timestamp(timestampDate, timestampDate, null, timestampDate, timestampDate),
       ...model.notify_users(isInsert),
     };
@@ -109,15 +141,16 @@ const formatOpenedOpportunity = async (docs, isInsert, user, allIntegrations, ad
   return Promise.all(docs.map(async (doc) => {
     const account = doc.AccountId && await mongo.findOne('salesforce', 'accounts', { Id: doc.AccountId });
     const status = doc.IsClosed ? (doc.IsWon && 'won') || 'lost' : 'opened';
+    const { integrationTeam } = allIntegrations[0];
     const timestampDate = new Date(doc.CreatedDate).getTime();
     const timestampExpectedDate = new Date(doc.CloseDate).getTime();
     return {
-      ...model.h7Info(manageSpecificOwner(allIntegrations[0].integrationTeam, doc), allIntegrations, user.team_id),
+      ...model.h7Info(manageSpecificOwner(integrationTeam, doc), allIntegrations, user.team_id),
       ...model.type('deal-opened'),
-      ...model.source(doc.Id, allIntegrations[0].integrationTeam, manageSpecificOwner(allIntegrations[0].integrationTeam, doc), doc.Id, doc),
+      ...model.source(doc.Id, integrationTeam, manageSpecificOwner(integrationTeam, doc), doc.Id, doc),
       ...model.description(doc.Name, doc.Description, 'deal-opened'),
       ...model.finalClient((account && account.Name) || null),
-      ...model.parametres(manageSpecificAmount(allIntegrations[0].integrationTeam, doc, addFields), user.default_currency, doc.Id, status),
+      ...model.parametres(manageSpecificAmount(integrationTeam, doc, addFields), user.default_currency, doc.Id, status),
       ...model.timestamp(timestampDate, timestampDate, null, timestampDate, timestampExpectedDate),
       ...model.notify_users(isInsert),
       ...model.otherUsers(doc, allIntegrations),
