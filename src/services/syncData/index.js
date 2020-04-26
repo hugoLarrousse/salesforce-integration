@@ -62,10 +62,10 @@ exports.everything = async (integrationInfo, user, allIntegrations, dateTZ, isAu
   // await syncByType(integrationInfo, 'account', user, undefined, isAuto && 'accountAuto', dateTZ);
   console.log('OPPORTUNITY');
   await syncByType(integrationInfo, 'opportunity', user, allIntegrations, isAuto && 'opportunityAuto', dateTZ);
-  console.log('TASK');
-  await syncByType(integrationInfo, 'task', user, allIntegrations, isAuto && 'taskAuto', dateTZ);
-  console.log('EVENT');
-  await syncByType(integrationInfo, 'event', user, allIntegrations, isAuto && 'eventAuto', dateTZ);
+  // console.log('TASK');
+  // await syncByType(integrationInfo, 'task', user, allIntegrations, isAuto && 'taskAuto', dateTZ);
+  // console.log('EVENT');
+  // await syncByType(integrationInfo, 'event', user, allIntegrations, isAuto && 'eventAuto', dateTZ);
   await heptawardApi.integration({ integration: { _id: integrationInfo._id, tokenExpiresAt: Date.now() + 7200000 } });
 };
 
