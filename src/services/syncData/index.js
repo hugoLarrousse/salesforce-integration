@@ -58,8 +58,8 @@ const syncByType = async (integrationInfo, dataType, user, allIntegrations, spec
 };
 
 exports.everything = async (integrationInfo, user, allIntegrations, dateTZ, isAuto) => {
-  console.log('ACCOUNT');
-  await syncByType(integrationInfo, 'account', user, undefined, isAuto && 'accountAuto', dateTZ);
+  // console.log('ACCOUNT');
+  // await syncByType(integrationInfo, 'account', user, undefined, isAuto && 'accountAuto', dateTZ);
   console.log('OPPORTUNITY');
   await syncByType(integrationInfo, 'opportunity', user, allIntegrations, isAuto && 'opportunityAuto', dateTZ);
   console.log('TASK');
