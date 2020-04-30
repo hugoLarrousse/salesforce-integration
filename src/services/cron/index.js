@@ -39,6 +39,9 @@ const cronTask = async () => {
     const date = new Date(Date.now() - (testMinuteStartHour ? 8 * MS_PER_MINUTE : 11 * MS_PER_MINUTE));
     console.log('RANGE', date);
     for (const integration of allInfoForCron.integrations) {
+      if (String(integration._id) === '5c7e9f62be563b155cc18b5b') { // TODO to be removed
+        continue; //eslint-disable-line
+      }
       try {
         const { user } = integration;
         console.log('user.email :', user.email);
