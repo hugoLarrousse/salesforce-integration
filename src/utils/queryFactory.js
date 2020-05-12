@@ -49,5 +49,7 @@ module.exports = (keys, filters, type, keysToRemove, keysToAdd, operator = 'SELE
   const realType = listOfTypes[type];
   if (!realType) throw Error(`this type: ${type} does not match the list`);
 
-  return `q=${operator}+${keysFormatted}+from+${realType}${filters && filterFormatted ? `+WHERE+${filterFormatted}` : ''}`;
+  const toReturn = `q=${operator}+${keysFormatted}+from+${realType}${filters && filterFormatted ? `+WHERE+${filterFormatted}` : ''}`;
+  console.log('toReturn', toReturn);
+  return toReturn;
 };
