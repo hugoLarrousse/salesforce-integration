@@ -2,8 +2,6 @@ const mongo = require('../../db/mongo');
 const model = require('./model');
 const logger = require('../../utils/logger');
 
-console.log(process.env.dctlbTeamId);
-
 const credentials = (infoLogin) => {
   return {
     token: infoLogin.access_token,
