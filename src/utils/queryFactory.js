@@ -36,7 +36,7 @@ const formatKeys = (keys, keysToRemove, keysToAdd) => {
 
 const formatFilters = (filters) => filters && filters.length && filters.join('+AND+');
 
-module.exports = (keys, filters, type, keysToRemove, keysToAdd, operator = 'SELECT') => {
+module.exports = (keys, filters, type, keysToRemove, keysToAdd, baseUrl, operator = 'SELECT') => {
   if (!keys) throw Error('no keys provided');
   // if (!filter) throw Error('no filter provided');
   if (!type) throw Error('no type provided');
@@ -44,7 +44,11 @@ module.exports = (keys, filters, type, keysToRemove, keysToAdd, operator = 'SELE
   const keysFormatted = formatKeys(keys, keysToRemove, keysToAdd);
   if (!keysFormatted) throw Error(`keys malformed, must be a string or an array, ${keys}`);
 
-  const filterFormatted = (filters && typeof filters === 'string') ? filters : formatFilters(filters);
+  let filterFormatted = (filters && typeof filters === 'string') ? filters : formatFilters(filters);
+
+  if (baseUrl === 'https://doctolib.my.salesforce.com' && type.includes('task')) {
+    filterFormatted = filterFormatted.replace("tasksubtype='call'", "tasksubtype+IN+('call', 'task')");
+  }
 
   const realType = listOfTypes[type];
   if (!realType) throw Error(`this type: ${type} does not match the list`);

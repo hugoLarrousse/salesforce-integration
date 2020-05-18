@@ -44,7 +44,11 @@ exports.getAllUsers = (baseUrl, accessToken, dataType, removeUserId) => {
 exports.getData = (baseUrl, accessToken, dataType, lastModifiedDateTZ, pathQuery, restrictions, addFields, customFilters = []) => {
   return request.salesforce(
     baseUrl, pathQuery || PATH_FOR_QUERY,
-    makeQuery(query.keys[dataType], [query.filters[dataType] + (lastModifiedDateTZ || ''), ...customFilters], dataType, restrictions, addFields),
+    makeQuery(
+      query.keys[dataType],
+      [query.filters[dataType] + (lastModifiedDateTZ || ''), ...customFilters],
+      dataType, restrictions, addFields, baseUrl,
+    ),
     'GET', { Authorization: `Bearer ${accessToken}` }, null, true
   );
 };
