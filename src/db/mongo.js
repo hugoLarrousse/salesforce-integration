@@ -6,50 +6,33 @@ const {
 } = require('./utils/mongoHelper');
 const logger = require('../utils/logger');
 
-const {
-  databaseSalesforce,
-  mongoOptions,
-  dbServer,
-} = process.env;
+let mongodbConnect = null;
 
-const mongodbSalesforce = MongoClient
-  .connect(`${dbServer}/${databaseSalesforce}${mongoOptions || ''}`, { poolSize: 20 })
-  .catch(err => logger.errorDb(__filename, 'mongo', null, null, `MongoClient.connect() : ${err.message}`, null, err));
-
-const mongodbName = {
-  salesforce: mongodbSalesforce,
-};
-
-
-const insert = async (databaseName, collectionName, doc) => {
-  const docToSave = addCreatedAtToModel(doc);
-  const db = await mongodbName[databaseName];
-  const response = await db.collection(collectionName).insertOne(docToSave);
-  let insertedDoc;
-  if (response.ops.length > 0) {
-    [insertedDoc] = response.ops;
-  } else {
-    logger.errorDb(__filename, insert.name, databaseName, collectionName, 'Unable to insert', null, doc);
+const createConnection = async () => {
+  try {
+    mongodbConnect = await MongoClient.connect(process.env.dbServer, { poolSize: 20, useNewUrlParser: true, useUnifiedTopology: true });
+    return 1;
+  } catch (e) {
+    logger.error(__filename, 'createConnection', e.message);
+    return 0;
   }
-  return insertedDoc;
 };
+
+const closeConnection = async () => mongodbConnect && mongodbConnect.close();
 
 const insertMany = async (databaseName, collectionName, docs) => {
   const docsToSave = docs.map(doc => addCreatedAtToModel(doc));
-  const db = await mongodbName[databaseName];
-  const response = await db.collection(collectionName).insertMany(docsToSave);
+  const response = await mongodbConnect.db(databaseName).collection(collectionName).insertMany(docsToSave);
   if (response.ops.length > 0) {
     return response.ops;
-    // logger.infoDb(__filename, insert.name, databaseName, collectionName, `${insertedDoc._id} inserted`, insertedDoc._id);
   }
-  logger.errorDb(__filename, insert.name, databaseName, collectionName, 'Unable to insert', null, docsToSave);
+  logger.errorDb(__filename, insertMany.name, databaseName, collectionName, 'Unable to insert many', null, docsToSave);
   return null;
 };
 
 const updateOne = async (databaseName, collectionName, query = {}, doc, options = {}) => {
   const docToUpdate = { $set: addUpdatedAtToModel(doc) };
-  const db = await mongodbName[databaseName];
-  const docUpdated = await db.collection(collectionName)
+  const docUpdated = await mongodbConnect.db(databaseName).collection(collectionName)
     .findOneAndUpdate(
       {
         ...query,
@@ -69,35 +52,11 @@ const updateOne = async (databaseName, collectionName, query = {}, doc, options 
   return docUpdated.value;
 };
 
-const updateOneSalesforce = async (databaseName, collectionName, query = {}, doc, options = {}) => {
-  const docToUpdate = { $set: doc };
-  const db = await mongodbName[databaseName];
-  const docUpdated = await db.collection(collectionName)
-    .updateOne(
-      {
-        ...query,
-      },
-      docToUpdate,
-      {
-        returnOriginal: false,
-        ...options,
-      }
-    );
-
-  if (docUpdated.result.ok === 1) {
-    return docUpdated.result;
-  }
-  logger.warnDb(__filename, updateOneSalesforce.name, databaseName, collectionName, 'Unable to update', null, doc);
-
-  return null;
-};
-
 
 const update = async (databaseName, collectionName, query = {}, doc, options = {}) => {
   const docToUpdate = { $set: addUpdatedAtToModel(doc) };
-  const db = await mongodbName[databaseName];
-  const updated = await db.collection(collectionName)
-    .update(
+  const updated = await mongodbConnect.db(databaseName).collection(collectionName)
+    .updateMany(
       {
         ...query,
         ...softDeleteRetrieveCondition,
@@ -108,10 +67,8 @@ const update = async (databaseName, collectionName, query = {}, doc, options = {
         returnOriginal: false,
       }
     );
-  if (updated.result.n > 0 && updated.result.ok === 1) {
-    // logger.infoDb(__filename, update.name, databaseName, collectionName, `${updated.result.nModified} updated`, null, doc);
-  } else if (!options.multi) {
-    logger.errorDb(__filename, update.name, databaseName, collectionName, 'Unable to update', null, doc);
+  if (!options.multi) {
+    logger.errorDb(__filename, update.name, databaseName, collectionName, `Unable to update, query: ${JSON.stringify(query)}`);
   }
   return updated.result;
 };
@@ -119,29 +76,13 @@ const update = async (databaseName, collectionName, query = {}, doc, options = {
 const softDelete = async (databaseName, collectionName, query = {}) =>
   updateOne(databaseName, collectionName, query, { deletedAt: Date.now() });
 
-const softDeleteMany = async (databaseName, collectionName, query = {}) =>
-  update(databaseName, collectionName, query, { deletedAt: Date.now() }, { multi: true });
-
-const deleteDoc = async (databaseName, collectionName, query) => {
-  const db = await mongodbName[databaseName];
-  const deleted = await db.collection(collectionName).remove(query);
-  if (deleted.result.ok === 1 && deleted.result.n >= 1) {
-    // logger.infoDb(__filename, deleteDoc.name, databaseName, collectionName, `${query._id} was removed`, query._id);
-    return true;
-  }
-  logger.errorDb(__filename, deleteDoc.name, databaseName, collectionName, 'Unable to delete', null, query);
-  return false;
-};
-
 const findOne = async (databaseName, collectionName, query = {}) => {
-  const db = await mongodbName[databaseName];
-  const docFound = await db.collection(collectionName).findOne({ ...query, ...softDeleteRetrieveCondition });
+  const docFound = await mongodbConnect.db(databaseName).collection(collectionName).findOne({ ...query, ...softDeleteRetrieveCondition });
   return docFound;
 };
 
 const find = async (databaseName, collectionName, query = {}, sort = {}, limit = 0, offset = 0) => {
-  const db = await mongodbName[databaseName];
-  const docs = await db.collection(collectionName)
+  const docs = await mongodbConnect.db(databaseName).collection(collectionName)
     .find({
       ...query,
       ...softDeleteRetrieveCondition,
@@ -154,76 +95,24 @@ const find = async (databaseName, collectionName, query = {}, sort = {}, limit =
 };
 
 const count = async (databaseName, collectionName, query) => {
-  const db = await mongodbName[databaseName];
-  return db.collection(collectionName)
-    .count({
+  return mongodbConnect.db(databaseName).collection(collectionName)
+    .countDocuments({
       ...query,
       ...softDeleteRetrieveCondition,
     });
 };
 
-const deleteMany = async (databaseName, collection, query, options) => {
-  const db = await mongodbName[databaseName];
-  const resultDelete = await db.collection(collection).deleteMany(query, options);
-  return resultDelete.result;
-};
+// const deleteMany = async (databaseName, collection, query, options) => {
+//   const resultDelete = await mongodbConnect.db(databaseName).collection(collection).deleteMany(query, options);
+//   return resultDelete.result;
+// };
 
-const updateOwnRules = async (databaseName, collection, query = {}, docToUpdate, options = {}) => {
-  const db = await mongodbName[databaseName];
-  const updated = await db.collection(collection)
-    .update(
-      query,
-      docToUpdate,
-      {
-        ...options,
-      }
-    );
-  if (updated.result.n > 0 && updated.result.ok === 1) {
-    // logger.infoDb(__filename, pipedriveUpdate.name, database, collection, `${updated.result.nModified} updated`, null, docToUpdate);
-  } else {
-    logger.errorDb(__filename, updateOwnRules.name, databaseName, collection, 'Unable to update', null, docToUpdate);
-  }
-  return updated.result;
-};
-
-const updateOneOwnRules = async (databaseName, collection, query, docToUpdate, options = {}) => {
-  const db = await mongodbName[databaseName];
-  const docUpdated = await db.collection(collection).findOneAndUpdate(query, docToUpdate, { returnOriginal: false, ...options });
-  if (docUpdated.ok === 1 && docUpdated.value) {
-    // logger.infoDb(__filename, pipedriveUpdateOne.name, database, collection, `${docUpdated.value._id} updated`, docUpdated.value._id);
-  } else if (docUpdated.lastErrorObject.upserted !== null) {
-    // logger.infoDb(__filename, pipedriveUpdateOne.name, database, collection, `${docUpdated.lastErrorObject.upserted} created`);
-  } else {
-    logger.warnDb(__filename, updateOneOwnRules.name, databaseName, collection, 'Unable to update', null, { docToUpdate });
-  }
-  return docUpdated;
-};
-
-const findOneAndReplace = async (databaseName, collection, query, toUpdate, options) => {
-  const db = await mongodbName[databaseName];
-  const docFoundAndModified = await db.collection(collection).findOneAndReplace(query, toUpdate, options);
-  if (docFoundAndModified.ok === 1) {
-    return docFoundAndModified.value;
-  }
-  logger.error(__filename, findOneAndReplace.name, `error: query: ${query}, toUpdate: ${toUpdate}; options: ${options}`);
-  return null;
-};
-
-
-// exports.getConnection = getConnection;
-exports.insert = insert;
+exports.createConnection = createConnection;
+exports.closeConnection = closeConnection;
 exports.updateOne = updateOne;
 exports.update = update;
 exports.softDelete = softDelete;
-exports.softDeleteMany = softDeleteMany;
-exports.deleteDoc = deleteDoc;
 exports.findOne = findOne;
 exports.find = find;
 exports.count = count;
-exports.deleteMany = deleteMany;
-exports.updateOneOwnRules = updateOneOwnRules;
-exports.updateOwnRules = updateOwnRules;
-exports.mongodbName = mongodbName;
-exports.findOneAndReplace = findOneAndReplace;
-exports.updateOneSalesforce = updateOneSalesforce;
 exports.insertMany = insertMany;
