@@ -41,13 +41,13 @@ exports.getAllUsers = (baseUrl, accessToken, dataType, removeUserId) => {
   return request.salesforce(baseUrl, PATH_FOR_QUERY, fullQuery, 'GET', { Authorization: `Bearer ${accessToken}` }, null, true);
 };
 
-exports.getData = (baseUrl, accessToken, dataType, lastModifiedDateTZ, pathQuery, restrictions, addFields, customFilters = []) => {
+exports.getData = (baseUrl, accessToken, dataType, lastModifiedDateTZ, pathQuery, restrictions, customFields, customFilters = []) => {
   return request.salesforce(
     baseUrl, pathQuery || PATH_FOR_QUERY,
     makeQuery(
       query.keys[dataType],
       [query.filters[dataType] + (lastModifiedDateTZ || ''), ...customFilters],
-      dataType, restrictions, addFields, baseUrl,
+      dataType, restrictions, customFields, baseUrl,
     ),
     'GET', { Authorization: `Bearer ${accessToken}` }, null, true
   );

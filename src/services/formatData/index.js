@@ -175,7 +175,9 @@ const formatTask = (docs, isInsert, user, allIntegrations) => {
 };
 
 const formatEvent = (docs, isInsert, user, allIntegrations) => {
+  const { integrationTeam } = allIntegrations[0];
   return Promise.all(docs.map(async (doc) => {
+    const eventNotDone = integrationTeam === process.env.mvoneTeam && doc.EventStatus__c !== 'DONE';
     const account = doc.AccountId && await mongo.findOne('salesforce', 'accounts', { Id: doc.AccountId });
     return {
       ...model.h7Info(doc.OwnerId, allIntegrations, user.team_id),
@@ -188,7 +190,7 @@ const formatEvent = (docs, isInsert, user, allIntegrations) => {
         new Date(doc.CreatedDate).getTime(),
         new Date(doc.StartDateTime).getTime(),
         new Date(doc.EndDateTime).getTime(),
-        new Date(doc.EndDateTime).getTime()
+        !eventNotDone && new Date(doc.EndDateTime).getTime(),
       ),
       ...model.notify_users(isInsert),
     };
@@ -211,7 +213,7 @@ const formatForDeletion = (docs, dataType) => {
   });
 };
 
-exports.echoesInfo = async ({ arrayInsert, arrayUpdate, arrayDelete }, dataType, user, allIntegrations, addFields, stageNames) => {
+exports.echoesInfo = async ({ arrayInsert, arrayUpdate, arrayDelete }, dataType, user, allIntegrations, addFields, stageNames, customFields) => {
   if (dataType === 'opportunity') {
     return {
       toInsert: await formatOpenedOpportunity(arrayInsert, true, user, allIntegrations, addFields, stageNames),
@@ -228,8 +230,8 @@ exports.echoesInfo = async ({ arrayInsert, arrayUpdate, arrayDelete }, dataType,
     };
   } else if (dataType === 'event') {
     return {
-      toInsert: await formatEvent(arrayInsert, true, user, allIntegrations),
-      toUpdate: await formatEvent(arrayUpdate, false, user, allIntegrations),
+      toInsert: await formatEvent(arrayInsert, true, user, allIntegrations, customFields),
+      toUpdate: await formatEvent(arrayUpdate, false, user, allIntegrations, customFields),
       toDelete: formatForDeletion(arrayDelete, dataType),
     };
   }

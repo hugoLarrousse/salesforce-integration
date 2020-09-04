@@ -29,7 +29,7 @@ const syncByType = async (integrationInfo, dataType, user, allIntegrations, spec
       if (!hasMore) {
         results = await api.getData(
           integrationInfo.instanceUrl, integrationInfo.token, special || dataType,
-          lastModifiedDateTZ, pathQuery, integrationInfo.restrictions, dataType === 'opportunity' && integrationInfo.addFields,
+          lastModifiedDateTZ, pathQuery, integrationInfo.restrictions, integrationInfo.customFields[dataType],
           extractCustomFilter(integrationInfo.customFilters, dataType),
         );
       } else {
@@ -41,7 +41,7 @@ const syncByType = async (integrationInfo, dataType, user, allIntegrations, spec
 
         if (dataTypeForEchoes.includes(dataType)) {
           const formattedData = await formatData.echoesInfo(dataForEchoes, dataType, user, allIntegrations, dataType === 'opportunity'
-            && integrationInfo.addFields, special && special.includes('Cron') && integrationInfo.stageNames);
+            && integrationInfo.addFields, special && special.includes('Cron') && integrationInfo.stageNames, integrationInfo.customFields[dataType]);
           if (formattedData.toInsert.length > 0
             || formattedData.toUpdate.length > 0
             || (formattedData.toUpsert && formattedData.toUpsert.length > 0)
