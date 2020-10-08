@@ -9,7 +9,7 @@ const allCrons = require('./src/services/cron');
 //   require('./src/services/cron').cron(); // eslint-disable-line
 // }, 8000);
 
-require('dotenv').load({ path: '.env' });
+require('dotenv').config();
 
 
 const app = express();
