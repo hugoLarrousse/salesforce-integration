@@ -12,9 +12,7 @@
     "lodash": "^4.17.19",
     "mongodb": "^3.5.6",
     "node-cron": "^1.2.1",
-    "request": "^2.87.0",
-    "request-promise": "^4.2.2",
-    "requestretry": "^1.13.0",
+    "requestretry": "^4.1.1",
     "winston": "^2.4.2",
     "winston-slack-hook": "^0.3.0"
   },
