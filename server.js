@@ -5,10 +5,6 @@ const mongo = require('./src/db/mongo');
 
 const allCrons = require('./src/services/cron');
 
-// setTimeout(() => {
-//   require('./src/services/cron').cron(); // eslint-disable-line
-// }, 8000);
-
 require('dotenv').config();
 
 
@@ -34,7 +30,7 @@ mongo.createConnection().then((code) => {
     server.listen(port, () => {
       const date = new Date();
       console.log(`H7 Salesforce service is running on port ${port} at ${date}`);
-      allCrons.cron();
+      allCrons.start();
     });
   } else {
     console.log('Error with MongoDb connection');
@@ -47,6 +43,7 @@ signals.forEach(sig => {
     if (process.env.NODE_ENV !== 'production') {
       console.info(`${sig} signal received: ', ${new Date()}`);
     }
+    allCrons.stop();
 
     // Stops the server from accepting new connections and finishes existing connections.
     server.close((err) => {

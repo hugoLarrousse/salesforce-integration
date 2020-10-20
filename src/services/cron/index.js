@@ -1,4 +1,4 @@
-const cron = require('node-cron');
+const { CronJob } = require('cron');
 const heptawardApi = require('../heptawardApi');
 const api = require('../api');
 const syncData = require('../syncData');
@@ -26,7 +26,7 @@ const refreshToken = async (integrationInfo) => {
 };
 
 
-const cronTask = async () => {
+const job = new CronJob('*/3 * * * *', async () => {
   try {
     const duration = Date.now();
     console.log('-----------------------');
@@ -80,12 +80,9 @@ const cronTask = async () => {
   } catch (e) {
     logger.error(__filename, 'cronTask', e.message);
   }
-};
+});
 
 
-exports.cron = async () => {
-  cron.schedule('*/3 * * * *', async () => {
-    await cronTask();
-  });
-};
+exports.start = async () => job.start();
+exports.stop = async () => job.stop();
 
