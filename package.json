@@ -38,13 +38,13 @@
   },
   "betterScripts": {
     "staging": {
-      "command": "pm2 delete salesforce && pm2 start server.js --name salesforce",
+      "command": "npm install && pm2 delete salesforce && pm2 start server.js --name salesforce",
       "env": {
         "NODE_ENV": "staging"
       }
     },
     "production": {
-      "command": "pm2 delete salesforce && pm2 start server.js --name salesforce",
+      "command": "npm install && pm2 delete salesforce && pm2 start server.js --name salesforce",
       "env": {
         "NODE_ENV": "production"
       }
