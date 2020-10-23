@@ -1,6 +1,16 @@
 # salesforceIntegration
 salesforce integration API
 
+parser between salesforce API and your backend
+
+## Stack
+
+* NodeJS
+* MongoDB
+* Express
+
+## TO DO
+
 * [x] OAuth 2.0
 * [x] get Opportunities thanks to a SOQL query + token (POC)
 * [x] get Events thanks to a SOQL query + token (POC)
@@ -9,4 +19,7 @@ salesforce integration API
 * [x] request salesforce
 * [x] rest API to communicate with the main back-end
 * [x] store data received from salesforce API (Opportunities, Events, Users...)
+* [ ] data in real time: sync data every X minutes
 * [ ] webhooks (streaming API) --> postponed
+
+Made with ❤️ by Hugo Larrousse
