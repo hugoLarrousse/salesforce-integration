@@ -19,7 +19,7 @@ parser between salesforce API and your backend
 * [x] request salesforce
 * [x] rest API to communicate with the main back-end
 * [x] store data received from salesforce API (Opportunities, Events, Users...)
-* [ ] data in real time: sync data every X minutes
+* [x] data in real time: sync data every X minutes
 * [ ] webhooks (streaming API) --> postponed
 
 Made with ❤️ by Hugo Larrousse
