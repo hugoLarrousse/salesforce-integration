@@ -52,37 +52,38 @@ const isToday = (date1, date2) => {
   return (year && month && day) || false;
 };
 
-const hasCheckErrorCloseDate = (customField, closeDate, lastModifiedDate) => {
-  let [year, month] = customField.split('-');
-  const [closeYear, closeMonth] = closeDate.split('-');
-  month -= 1;
-  if (month === 0) {
-    month = 12;
-    year -= 1;
-  }
+// const hasCheckErrorCloseDate = (customField, closeDate, lastModifiedDate) => {
+//   let [year, month] = customField.split('-');
+//   const [closeYear, closeMonth] = closeDate.split('-');
+//   month -= 1;
+//   if (month === 0) {
+//     month = 12;
+//     year -= 1;
+//   }
 
-  if (month === Number(closeMonth) && Number(year) === Number(closeYear)) return closeDate;
-  if (month < 10) month = `0${month}`;
+//   if (month === Number(closeMonth) && Number(year) === Number(closeYear)) return closeDate;
+//   if (month < 10) month = `0${month}`;
 
-  const [lastModifiedYear, lastModifiedMonth, lastModifiedDay] = lastModifiedDate.split('T')[0].split('-');
+//   const [lastModifiedYear, lastModifiedMonth, lastModifiedDay] = lastModifiedDate.split('T')[0].split('-');
 
-  if (lastModifiedYear === year && lastModifiedMonth === month) {
-    return `${year}-${month}-${lastModifiedDay}`;
-  }
+//   if (lastModifiedYear === year && lastModifiedMonth === month) {
+//     return `${year}-${month}-${lastModifiedDay}`;
+//   }
 
-  const dayOfTheMonth = new Date().getUTCDate();
+//   const dayOfTheMonth = new Date().getUTCDate();
 
-  return `${year}-${month}-${dayOfTheMonth < 10 ? `0${dayOfTheMonth}` : dayOfTheMonth}`;
-};
+//   return `${year}-${month}-${dayOfTheMonth < 10 ? `0${dayOfTheMonth}` : dayOfTheMonth}`;
+// };
 
-const formatWonLostDate = (close, lastModified, integrationTeam, doc) => {
+const formatWonLostDate = (close, lastModified, integrationTeam, /* doc */) => {
   try {
-    let closeDate = null;
-    if (process.env.dctlbTeamId === integrationTeam && doc.First_Billing_Month_YYYY_MM__c) {
-      closeDate = new Date(hasCheckErrorCloseDate(doc.First_Billing_Month_YYYY_MM__c, close, lastModified));
-    } else {
-      closeDate = new Date(close);
-    }
+    // let closeDate = null;
+    // if (process.env.dctlbTeamId === integrationTeam && doc.First_Billing_Month_YYYY_MM__c) {
+    //   closeDate = new Date(hasCheckErrorCloseDate(doc.First_Billing_Month_YYYY_MM__c, close, lastModified));
+    // } else {
+    //   closeDate = new Date(close);
+    // }
+    const closeDate = new Date(close);
 
     const lastModifiedDate = new Date(lastModified);
     if (isToday(closeDate, lastModifiedDate)) {
