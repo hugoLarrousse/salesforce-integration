@@ -1,6 +1,8 @@
 const api = require('../api');
 const formatData = require('../formatData');
 
+
+// TO DO: removed or refactor how we get users
 const { dctlbEmails } = process.env;
 const dctlbEmailsFormatted = dctlbEmails && dctlbEmails.split(',');
 
