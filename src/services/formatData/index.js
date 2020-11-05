@@ -115,11 +115,13 @@ const manageSpecificOwner = (integrationTeam, doc) => {
 };
 
 // to be changed (amount)
-const formatWonLostOpportunity = async (docs, isInsert, user, allIntegrations, addFields) => {
+const formatWonLostOpportunity = async (docs, isInsert, user, allIntegrations, addFields, stageNames) => {
   return Promise.all(docs.map(async (doc) => {
     const account = doc.AccountId && await mongo.findOne('salesforce', 'accounts', { Id: doc.AccountId });
-    const status = doc.IsWon ? 'won' : 'lost';
+    let status = doc.IsWon ? 'won' : 'lost';
     const { integrationTeam } = allIntegrations[0];
+    // TO DO: temp for dctlb
+    status = (integrationTeam === process.env.dctlbTeamId && doc.StageName === 'Training') ? 'won' : status;
     // const timestampDate = new Date(doc.LastModifiedDate).getTime();
     const timestampDate = formatWonLostDate(doc.CloseDate, doc.LastModifiedDate, integrationTeam, doc);
     return {
@@ -131,6 +133,8 @@ const formatWonLostOpportunity = async (docs, isInsert, user, allIntegrations, a
       ...model.parametres(manageSpecificAmount(integrationTeam, doc, addFields), user.default_currency, doc.Id, status),
       ...model.timestamp(timestampDate, timestampDate, null, timestampDate, timestampDate),
       ...model.notify_users(isInsert),
+      // TO DO: temp for dctlb
+      ...stageNames && model.stageCelebration(stageNames, doc.StageName),
     };
   }));
 };
@@ -216,11 +220,13 @@ const formatForDeletion = (docs, dataType) => {
 
 exports.echoesInfo = async ({ arrayInsert, arrayUpdate, arrayDelete }, dataType, user, allIntegrations, addFields, stageNames, customFields) => {
   if (dataType === 'opportunity') {
+    const wonLostFiltered = allIntegrations[0].integrationTeam === process.env.dctlbTeamId
+      ? [...arrayInsert, ...arrayUpdate].filter(data => data.StageName === 'Training' || data.IsClosed)
+      : [...arrayInsert, ...arrayUpdate].filter(data => data.IsClosed);
     return {
       toInsert: await formatOpenedOpportunity(arrayInsert, true, user, allIntegrations, addFields, stageNames),
       toUpdate: await formatOpenedOpportunity(arrayUpdate, false, user, allIntegrations, addFields, stageNames),
-      toUpsert: await formatWonLostOpportunity([...arrayInsert, ...arrayUpdate]
-        .filter(data => data.IsClosed), false, user, allIntegrations, addFields),
+      toUpsert: await formatWonLostOpportunity(wonLostFiltered, false, user, allIntegrations, addFields, stageNames),
       toDelete: formatForDeletion(arrayDelete, dataType),
     };
   } else if (dataType === 'task') {

@@ -7,14 +7,21 @@ const dataTypeForEchoes = ['opportunity', 'task', 'event'];
 
 const extractCustomFilter = (customFilters, type) => (customFilters && customFilters[type]) || [];
 
-const checkRecords = (records, allIntegrationsUserIds, integrationTeam) => {
+const checkRecords = (records, allIntegrationsUserIds, integrationTeam, dataType) => {
   if (!allIntegrationsUserIds) return records;
-  return records.filter(record => allIntegrationsUserIds.includes(record.OwnerId)).map(record => {
+  const recordFiltered = records.filter(record => allIntegrationsUserIds.includes(record.OwnerId)).map(record => {
     return {
       ...record,
       teamId: integrationTeam,
     };
   });
+  // TO DO: temp, only for dctlb
+  if (integrationTeam !== process.env.dctlbTeamId) return recordFiltered;
+  if (dataType === 'call') {
+    const regex = new RegExp(process.env.dctlbTaskFilter);
+    return recordFiltered.filter(record => regex.test(record.Subject.toLowerCase()) && record.Subject.toLowerCase().includes('sms'));
+  }
+  return recordFiltered;
 };
 
 
@@ -37,7 +44,10 @@ const syncByType = async (integrationInfo, dataType, user, allIntegrations, spec
       }
       if (results && results.records && results.records.length > 0) {
         urlPath = results.nextRecordsUrl;
-        const dataForEchoes = await saveData(dataType, checkRecords(results.records, allIntegrationsUserIds, integrationInfo.integrationTeam));
+        const dataForEchoes = await saveData(
+          dataType,
+          checkRecords(results.records, allIntegrationsUserIds, integrationInfo.integrationTeam, dataType)
+        );
 
         if (dataTypeForEchoes.includes(dataType)) {
           const formattedData = await formatData.echoesInfo(dataForEchoes, dataType, user, allIntegrations, dataType === 'opportunity'
