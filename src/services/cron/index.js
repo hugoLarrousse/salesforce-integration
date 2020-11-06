@@ -37,7 +37,7 @@ const job = new CronJob('*/3 * * * *', async () => {
     }
     const testMinuteStartHour = [0, 3, 6, 9].includes(new Date().getMinutes());
     const date = new Date(Date.now() - (testMinuteStartHour ? 8 * MS_PER_MINUTE : 11 * MS_PER_MINUTE));
-    console.log('RANGE', date);
+    console.log('RANGE', `${date.getHours()}h${date.getMinutes()} - ${new Date(duration).getHours()}h${new Date(duration).getMinutes()}`);
     for (const integration of allInfoForCron.integrations) {
       if (String(integration._id) === '5c7e9f62be563b155cc18b5b' || String(integration._id) === '5e9b800c63237f3440fb1062') { // TODO to be removed
         continue; //eslint-disable-line
