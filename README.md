@@ -20,7 +20,7 @@ parser between salesforce API and your backend
 * [x] rest API to communicate with the main back-end
 * [x] store data received from salesforce API (Opportunities, Events, Users...)
 * [x] data in real time: sync data every X minutes
-* [ ] make the integration more flexible: fields on demand, filters & date
+* [x] make the integration more flexible: fields on demand, filters & date
 * [ ] webhooks (streaming API) --> postponed
 
 Made with ❤️ by Hugo Larrousse
