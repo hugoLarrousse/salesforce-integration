@@ -58,6 +58,7 @@ const createLabelOther =
 
 const error = async (filename, methodName, message, rest) => {
   // customLogger.error(createLabelOther(filename, methodName, message, null), rest);
+  console.log(createLabelOther(filename, methodName, message, null), rest);
 };
 
 const errorDb = async (filename, methodName, database, collection, message, _id, rest) => {
