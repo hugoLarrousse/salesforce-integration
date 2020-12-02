@@ -32,11 +32,11 @@ exports.source = (id, teamId, userId, opportunityId) => {
   };
 };
 
-exports.description = (titre, subject, type) => {
+exports.description = (titre, subject = '', type) => {
   return {
     description: {
       titre: titre || '',
-      sujet: subject || '',
+      sujet: subject ? subject.slice(0, 200) : '',
       icon: icon[type] || null,
     },
   };
