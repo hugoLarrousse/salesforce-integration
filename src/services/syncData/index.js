@@ -2,6 +2,7 @@ const api = require('../api');
 const saveData = require('../saveData');
 const formatData = require('../formatData');
 const heptawardApi = require('../heptawardApi');
+const sockets = require('../sockets');
 
 const dataTypeForEchoes = ['opportunity', 'task', 'event'];
 
@@ -69,14 +70,19 @@ const syncByType = async (integrationInfo, dataType, user, allIntegrations, spec
 
 exports.everything = async (integrationInfo, user, allIntegrations, dateTZ, isAuto) => {
   console.log('ACCOUNT');
+  sockets.sendInfoSync({ message: 'sse-salesforce-account', step: 1, teamId: user.team_id });
   await syncByType(integrationInfo, 'account', user, undefined, isAuto && 'accountAuto', dateTZ);
   console.log('OPPORTUNITY');
+  sockets.sendInfoSync({ message: 'sse-salesforce-opportunity', step: 2, teamId: user.team_id });
   await syncByType(integrationInfo, 'opportunity', user, allIntegrations, isAuto && 'opportunityAuto', dateTZ);
   console.log('TASK');
+  sockets.sendInfoSync({ message: 'sse-salesforce-task', step: 3, teamId: user.team_id });
   await syncByType(integrationInfo, 'task', user, allIntegrations, isAuto && 'taskAuto', dateTZ);
   console.log('EVENT');
+  sockets.sendInfoSync({ message: 'sse-salesforce-event', step: 4, teamId: user.team_id });
   await syncByType(integrationInfo, 'event', user, allIntegrations, isAuto && 'eventAuto', dateTZ);
   await heptawardApi.integration({ integration: { _id: integrationInfo._id, tokenExpiresAt: Date.now() + 7200000 } });
+  sockets.sendInfoSync({ message: 'sse-salesforce-done', step: 5, end: true, teamId: user.team_id }); // eslint-disable-line
 };
 
 exports.syncByType = syncByType;
