@@ -7,8 +7,6 @@ const allCrons = require('./src/services/cron');
 
 require('dotenv').config();
 
-console.log('socketServer', process.env.socketServer);
-
 
 const app = express();
 const server = require('http').createServer(app);

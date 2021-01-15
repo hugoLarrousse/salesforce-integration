@@ -1,9 +1,10 @@
 const io = require('socket.io-client');
+const config = require('config');
 
-const { socketServer, socketSecure = false } = process.env;
-console.log('process.env', process.env.socketServer);
+const socketInfo = config.get('socket');
+console.log('socketInfo', socketInfo);
 
-const socket = io.connect(socketServer, { secure: socketSecure });
+const socket = io.connect(socketInfo.url);
 
 exports.sendInfoSync = (data) => {
   socket.emit('fromSalesforceInfoSync', data);

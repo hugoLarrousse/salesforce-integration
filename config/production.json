@@ -1,4 +1,7 @@
 {
   "env": "production",
-  "h7Url": "https://api.heptaward.com"
+  "h7Url": "https://api.heptaward.com",
+  "socket": {
+    "url": "https://sockets.heptaward.com"
+  }
 }

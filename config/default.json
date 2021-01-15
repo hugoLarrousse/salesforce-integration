@@ -9,5 +9,8 @@
   },
   "env": "default",
   "h7Url": "https://api.heptaward.com",
-  "triggerName": ["h7OpportunityTrigger", "h7EventTrigger", "h7TaskTrigger", "h7AccountTrigger", "h7UserTrigger"]
+  "triggerName": ["h7OpportunityTrigger", "h7EventTrigger", "h7TaskTrigger", "h7AccountTrigger", "h7UserTrigger"],
+  "socket": {
+    "url": "http://localhost:3332"
+  }
 }
