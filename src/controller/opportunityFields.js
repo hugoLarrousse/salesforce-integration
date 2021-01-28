@@ -14,7 +14,7 @@ router.post('/', middleware.refreshToken, async (req, res) => {
     check.integrationInfo(integrationInfo);
     const opportunityH7 = await mongo.find('salesforce', 'opportunities', { teamId: integrationInfo.integrationTeam }, { _id: -1 }, 1);
     if (opportunityH7 && opportunityH7[0]) {
-      const opportunity = await api.getOneOpportunity(integrationInfo.instanceUrl, integrationInfo.token, opportunityH7[0].Id);
+      const opportunity = await api.getOneByTypeAndId('Opportunity', integrationInfo.instanceUrl, integrationInfo.token, opportunityH7[0].Id);
 
       const opportunityFields = Object.keys(opportunity).filter(fields => fields.includes('__c') || fields === 'Amount');
       res.status(200).send({ opportunityFields });

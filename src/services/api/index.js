@@ -57,11 +57,19 @@ exports.getMoreData = (baseUrl, accessToken, pathUrl) => {
   return request.salesforce(baseUrl, pathUrl, null, 'GET', { Authorization: `Bearer ${accessToken}` }, null, true);
 };
 
-exports.getOneOpportunity = (baseUrl, accessToken, opportunityId) => {
+exports.getOneByTypeAndId = (type, baseUrl, accessToken, typeId) => {
   return request.salesforce(
-    baseUrl, `/services/data/v43.0/sobjects/Opportunity/${opportunityId}`,
+    baseUrl, `/services/data/v43.0/sobjects/${type}/${typeId}`,
     null, 'GET', { Authorization: `Bearer ${accessToken}` }
   );
+};
+
+exports.getOneByTypeToTest = async (type, baseUrl, accessToken) => {
+  const sObject = await request.salesforce(
+    baseUrl, `/services/data/v43.0/sobjects/${type}`,
+    null, 'GET', { Authorization: `Bearer ${accessToken}` }
+  );
+  return sObject && sObject.recentItems && sObject.recentItems[0] && sObject.recentItems[0].Id;
 };
 
 exports.getApexClass = (baseUrl, accessToken) => {

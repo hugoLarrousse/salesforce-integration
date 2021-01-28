@@ -16,4 +16,8 @@ exports.user = (data) => {
   return request.salesforce(H7_URL, 'crm/user', null, 'POST', { Authorization: fixedToken }, data);
 };
 
+exports.restrictions = (data) => {
+  return request.salesforce(H7_URL, 'crm/restrictions', null, 'POST', { Authorization: fixedToken }, data);
+};
+
 exports.integrations = () => request.salesforce(H7_URL, 'crm/integration', null, 'GET', { Authorization: fixedToken });

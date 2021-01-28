@@ -1,8 +1,10 @@
 const api = require('../api');
+const query = require('../api/query');
 const saveData = require('../saveData');
 const formatData = require('../formatData');
 const heptawardApi = require('../heptawardApi');
 const sockets = require('../sockets');
+const logger = require('../../utils/logger');
 
 const dataTypeForEchoes = ['opportunity', 'task', 'event'];
 
@@ -25,6 +27,33 @@ const checkRecords = (records, allIntegrationsUserIds, integrationTeam, dataType
   return recordFiltered;
 };
 
+const checkFieldsFirstTime = async (dataType, integrationInfo) => {
+  try {
+    const id = await api.getOneByTypeToTest(dataType, integrationInfo.instanceUrl, integrationInfo.token);
+    if (!id) return null;
+
+    const doc = await api.getOneByTypeAndId(dataType, integrationInfo.instanceUrl, integrationInfo.token, id);
+    if (!doc) return null;
+
+    const fields = Object.keys(doc);
+
+    const restrictions = query.keys[dataType].split(',').filter(field => !Object.keys(fields).includes(field));
+
+    if (!restrictions || restrictions.length === 0) {
+      return null;
+    }
+    const oldRestrictions = integrationInfo.restrictions || [];
+
+    const newRestrictions = [...new Set([...restrictions, ...oldRestrictions])];
+
+    await heptawardApi.restrictions({ restrictions: newRestrictions, orgaId: integrationInfo.orgaId });
+    return newRestrictions;
+  } catch (e) {
+    logger.error(__filename, 'checkFieldsFirstTime', `integrationInfo: ${integrationInfo}, error: ${e.message}`);
+    return null;
+  }
+};
+
 
 const syncByType = async (integrationInfo, dataType, user, allIntegrations, special, lastModifiedDateTZ, pathQuery) => {
   try {
@@ -32,6 +61,13 @@ const syncByType = async (integrationInfo, dataType, user, allIntegrations, spec
     let urlPath = '';
     let results = null;
     const allIntegrationsUserIds = allIntegrations && allIntegrations.map(i => i.integrationId || 'NoUserIntegrationId');
+
+    if (user.firsTime) {
+      const newRestrictions = await checkFieldsFirstTime(dataType, integrationInfo);
+      if (newRestrictions) {
+        integrationInfo.restrictions = newRestrictions; //eslint-disable-line
+      }
+    }
 
     do {
       if (!hasMore) {
