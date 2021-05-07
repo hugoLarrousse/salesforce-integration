@@ -10,7 +10,7 @@
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "joi": "^13.4.0",
-    "lodash": "^4.17.20",
+    "lodash": "^4.17.21",
     "mongodb": "^3.6.2",
     "requestretry": "^4.1.1",
     "socket.io-client": "^2.3.0",
