@@ -32,6 +32,7 @@ const job = new CronJob('*/3 * * * *', async () => {
     console.log('-----------------------');
     console.log('START CRON', new Date(duration));
     const allInfoForCron = await heptawardApi.integrations();
+    console.log('allInfoForCron', allInfoForCron);
     if (!allInfoForCron || !allInfoForCron.integrations || !allInfoForCron.others) {
       throw new Error('No integrations');
     }
