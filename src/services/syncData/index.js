@@ -62,7 +62,7 @@ const syncByType = async (integrationInfo, dataType, user, allIntegrations, spec
     let results = null;
     const allIntegrationsUserIds = allIntegrations && allIntegrations.map(i => i.integrationId || 'NoUserIntegrationId');
 
-    if (user.firsTime) {
+    if (user.firstTime) {
       const newRestrictions = await checkFieldsFirstTime(dataType, integrationInfo);
       if (newRestrictions) {
         integrationInfo.restrictions = newRestrictions; //eslint-disable-line
