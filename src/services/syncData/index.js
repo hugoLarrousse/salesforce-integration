@@ -11,7 +11,6 @@ const dataTypeForEchoes = ['opportunity', 'task', 'event'];
 const extractCustomFilter = (customFilters, type) => (customFilters && customFilters[type]) || [];
 
 const checkRecords = (records, allIntegrationsUserIds, integrationTeam, dataType) => {
-  console.log('records', records.length);
   if (!allIntegrationsUserIds) return records;
   const recordFiltered = records.filter(record => allIntegrationsUserIds.includes(record.OwnerId)).map(record => {
     return {
@@ -19,10 +18,8 @@ const checkRecords = (records, allIntegrationsUserIds, integrationTeam, dataType
       teamId: integrationTeam,
     };
   });
-  console.log('recordFiltered', recordFiltered);
   // TO DO: temp, only for dctlb
   if (integrationTeam !== process.env.dctlbTeamId) return recordFiltered;
-  console.log('AHAHAHAHAHAH', integrationTeam);
   if (dataType === 'call') {
     const regex = new RegExp(process.env.dctlbTaskFilter);
     return recordFiltered.filter(record => regex.test(record.Subject.toLowerCase()) && record.Subject.toLowerCase().includes('sms'));
@@ -84,22 +81,18 @@ const syncByType = async (integrationInfo, dataType, user, allIntegrations, spec
       }
       if (results && results.records && results.records.length > 0) {
         urlPath = results.nextRecordsUrl;
-        console.log('allIntegrationsUserIds', allIntegrationsUserIds);
         const dataForEchoes = await saveData(
           dataType,
           checkRecords(results.records, allIntegrationsUserIds, integrationInfo.integrationTeam, dataType)
         );
-        console.log('dataForEchoes', dataForEchoes);
 
         if (dataTypeForEchoes.includes(dataType)) {
-          console.log('dataType', dataType);
           const formattedData = await formatData.echoesInfo(dataForEchoes, dataType, user, allIntegrations, dataType === 'opportunity'
             && integrationInfo.addFields, special && special.includes('Cron') && integrationInfo.stageNames, integrationInfo.customFields[dataType]);
           if (formattedData.toInsert.length > 0
             || formattedData.toUpdate.length > 0
             || (formattedData.toUpsert && formattedData.toUpsert.length > 0)
             || (formattedData.toDelete && formattedData.toDelete.length > 0)) {
-              console.log('FORMATTEDDATA', !!formattedData);
             await heptawardApi.echoes(formattedData);
           }
         }

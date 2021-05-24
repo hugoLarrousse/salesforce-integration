@@ -26,13 +26,12 @@ const refreshToken = async (integrationInfo) => {
 };
 
 
-const job = new CronJob('*/2 * * * *', async () => {
+const job = new CronJob('*/3 * * * *', async () => {
   try {
     const duration = Date.now();
     console.log('-----------------------');
     console.log('START CRON', new Date(duration));
     const allInfoForCron = await heptawardApi.integrations();
-    console.log('allInfoForCron', allInfoForCron);
     if (!allInfoForCron || !allInfoForCron.integrations || !allInfoForCron.others) {
       throw new Error('No integrations');
     }
