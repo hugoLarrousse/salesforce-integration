@@ -93,6 +93,10 @@ const syncByType = async (integrationInfo, dataType, user, allIntegrations, spec
             || formattedData.toUpdate.length > 0
             || (formattedData.toUpsert && formattedData.toUpsert.length > 0)
             || (formattedData.toDelete && formattedData.toDelete.length > 0)) {
+            console.log('insert: ', formattedData.toInsert.length);
+            console.log('update: ', formattedData.toUpdate.length);
+            console.log('toUpsert: ', formattedData.toUpsert && formattedData.toUpsert.length > 0);
+            console.log('delete: ', formattedData.toDelete && formattedData.toDelete.length > 0);
             await heptawardApi.echoes(formattedData);
           }
         }
