@@ -85,14 +85,17 @@ const syncByType = async (integrationInfo, dataType, user, allIntegrations, spec
           dataType,
           checkRecords(results.records, allIntegrationsUserIds, integrationInfo.integrationTeam, dataType)
         );
+        console.log('dataForEchoes', dataForEchoes);
 
         if (dataTypeForEchoes.includes(dataType)) {
+          console.log('dataType', dataType);
           const formattedData = await formatData.echoesInfo(dataForEchoes, dataType, user, allIntegrations, dataType === 'opportunity'
             && integrationInfo.addFields, special && special.includes('Cron') && integrationInfo.stageNames, integrationInfo.customFields[dataType]);
           if (formattedData.toInsert.length > 0
             || formattedData.toUpdate.length > 0
             || (formattedData.toUpsert && formattedData.toUpsert.length > 0)
             || (formattedData.toDelete && formattedData.toDelete.length > 0)) {
+              console.log('FORMATTEDDATA', !!formattedData);
             await heptawardApi.echoes(formattedData);
           }
         }
