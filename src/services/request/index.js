@@ -48,7 +48,7 @@ const salesforce = async (baseUrl, path, query, method, headers, data, retry) =>
   }
 
   const { error, response, body } = await requestRetry(options);
-  console.log(body);
+  console.log('BODY', body && body.records && body.records.length > 0);
 
   if (error) {
     throw new Error(error);
