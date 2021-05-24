@@ -26,7 +26,7 @@ const refreshToken = async (integrationInfo) => {
 };
 
 
-const job = new CronJob('*/3 * * * *', async () => {
+const job = new CronJob('*/2 * * * *', async () => {
   try {
     const duration = Date.now();
     console.log('-----------------------');
