@@ -12,7 +12,7 @@
     "joi": "^13.4.0",
     "lodash": "^4.17.20",
     "mongodb": "^3.6.2",
-    "requestretry": "^4.1.1",
+    "requestretry": "^7.0.0",
     "socket.io-client": "^2.3.0",
     "winston": "^2.4.2",
     "winston-slack-hook": "^0.3.0"
